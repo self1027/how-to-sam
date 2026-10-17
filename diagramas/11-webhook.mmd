@@ -1,0 +1,15 @@
+flowchart TD
+  A["Provedor envia evento<br/>pode repetir e chegar em pico"] --> B["API valida origem, assinatura<br/>schema e ID estável"]
+  B --> C{"Evento válido?"}
+  C -->|"Não"| D["Recusar sem efeitos de negócio"]
+  C -->|"Sim"| E["Transação local<br/>registrar recepção + evento na outbox"]
+  E --> F["Commit confirmado"]
+  F --> G["Responder aceite ao provedor"]
+  F --> H["Publicador envia evento à fila<br/>e marca envio após reconhecimento"]
+  H --> I["Worker com concorrência limitada<br/>e protocolo de idempotência"]
+  I --> J{"Efeito já aplicado<br/>ou estado remoto incerto?"}
+  J -->|"Sim"| K["Consultar estado e reconciliar<br/>sem duplicar o efeito"]
+  J -->|"Não"| L["Executar regra e persistir resultado"]
+  K --> M["Confirmar somente após conclusão<br/>ou encaminhar falha para tratamento"]
+  L --> M
+  M --> N["Medir aceite, espera na fila<br/>processamento, erros e tempo total"]

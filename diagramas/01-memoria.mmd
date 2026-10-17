@@ -1,0 +1,8 @@
+flowchart TD
+  A["Referências mantidas pelo programa<br/>ex.: variável global ou closure"] --> B["Map ou objeto ainda alcançável"]
+  B --> C["Objetos referenciados no heap"]
+  C --> D{"Ainda há caminho<br/>a partir das raízes?"}
+  D -->|"Sim"| E["GC preserva o objeto<br/>mesmo sem utilidade para o negócio"]
+  D -->|"Não"| F["Objeto pode ser coletado<br/>sem prazo de liberação garantido"]
+  E --> G["Aplicação descarta referências<br/>com limite, expiração ou delete"]
+  G --> D

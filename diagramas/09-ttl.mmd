@@ -1,0 +1,6 @@
+flowchart TD
+  A["Ler registro DynamoDB"] --> B{"Existe e expiresAt<br/>é maior que agora?"}
+  B -->|"Sim"| C["Registro ainda vigente<br/>aplicar a regra de negócio"]
+  B -->|"Não"| D["Tratar como ausente ou expirado<br/>mesmo se o item continuar na tabela"]
+  E["Limpeza TTL do DynamoDB<br/>processo assíncrono"] -. "remove posteriormente" .-> F["Item expirado deixa de existir"]
+  D -. "independe da remoção física" .-> E

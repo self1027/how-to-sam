@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant C as Chamador
+  participant F as Função async
+  participant I as I/O pendente
+  C->>F: chamar carregar()
+  F->>F: executar trecho síncrono
+  F->>I: iniciar operação
+  F-->>C: devolver Promise pendente
+  Note over C,F: await suspende a continuação de F
+  C->>C: outros callbacks podem executar
+  I-->>F: operação termina
+  Note over F: continuação é agendada
+  F->>F: retomar após await
+  F-->>C: resolver Promise

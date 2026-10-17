@@ -1,0 +1,9 @@
+flowchart TD
+  A["Montar chave correta<br/>empresa, período, filtros e permissão"] --> B["Consultar cache"]
+  B --> C{"Entrada presente e válida?"}
+  C -->|"Sim"| D["Devolver resultado reutilizado"]
+  C -->|"Não"| E["Coordenar recomputação da chave<br/>para limitar cache stampede"]
+  E --> F["Consultar fonte com limites"]
+  F --> G["Guardar resultado com TTL<br/>e política de capacidade"]
+  G --> H["Devolver resultado"]
+  I["Alteração na origem"] -. "invalidar ou aceitar defasagem permitida" .-> B

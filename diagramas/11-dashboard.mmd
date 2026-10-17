@@ -1,0 +1,12 @@
+flowchart TD
+  A["Relatório ficou lento"] --> B["Medir consulta e plano<br/>volume lido, filtros e paginação"]
+  B --> C["Corrigir consulta e índice<br/>medir novamente"]
+  C --> D{"Ainda há pressão<br/>na carga operacional?"}
+  D -->|"Não"| E["Acompanhar latência e crescimento"]
+  D -->|"Sim"| F{"Qual compromisso<br/>o produto aceita?"}
+  F -->|"Resultado reutilizável"| G["Cache ou agregação<br/>com atraso declarado"]
+  F -->|"Separar leituras"| H["Réplica ou modelo de leitura<br/>considerando atraso e operação"]
+  F -->|"Histórico pouco acessado"| I["Arquivar com catálogo<br/>integridade e recuperação"]
+  G --> J["Comparar resultado, custo<br/>consistência e recuperação"]
+  H --> J
+  I --> J

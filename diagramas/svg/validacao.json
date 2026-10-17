@@ -1,0 +1,98 @@
+[
+  {
+    "id": "00-mapa",
+    "status": "ok"
+  },
+  {
+    "id": "01-runtime",
+    "status": "ok"
+  },
+  {
+    "id": "01-memoria",
+    "status": "ok"
+  },
+  {
+    "id": "02-v8",
+    "status": "ok"
+  },
+  {
+    "id": "02-decisao",
+    "status": "ok"
+  },
+  {
+    "id": "03-await",
+    "status": "ok"
+  },
+  {
+    "id": "03-metricas",
+    "status": "ok"
+  },
+  {
+    "id": "04-camadas",
+    "status": "ok"
+  },
+  {
+    "id": "04-di",
+    "status": "ok"
+  },
+  {
+    "id": "05-ciclo",
+    "status": "ok"
+  },
+  {
+    "id": "06-contrato",
+    "status": "ok"
+  },
+  {
+    "id": "06-release",
+    "status": "ok"
+  },
+  {
+    "id": "07-infra",
+    "status": "ok"
+  },
+  {
+    "id": "08-outbox",
+    "status": "ok"
+  },
+  {
+    "id": "08-worker",
+    "status": "ok"
+  },
+  {
+    "id": "08-fanout",
+    "status": "ok"
+  },
+  {
+    "id": "09-banco",
+    "status": "ok"
+  },
+  {
+    "id": "09-lote",
+    "status": "ok"
+  },
+  {
+    "id": "09-ttl",
+    "status": "ok"
+  },
+  {
+    "id": "10-cache",
+    "status": "ok"
+  },
+  {
+    "id": "10-arquivo",
+    "status": "ok"
+  },
+  {
+    "id": "11-webhook",
+    "status": "ok"
+  },
+  {
+    "id": "11-dashboard",
+    "status": "ok"
+  },
+  {
+    "id": "12-conceitos",
+    "status": "ok"
+  }
+]

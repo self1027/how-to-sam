@@ -1,0 +1,9 @@
+flowchart TD
+  A["Definir métrica e carga representativa"] --> B["Separar aquecimento<br/>de medição em regime estável"]
+  B --> C["Medir fluxo e etapas<br/>usar profiler onde necessário"]
+  C --> D["Localizar gargalo real<br/>CPU, banco, rede ou serialização"]
+  D --> E["Alterar uma hipótese por vez"]
+  E --> F{"Ganho no fluxo completo<br/>e comportamento preservado?"}
+  F -->|"Sim"| G["Registrar evidência e acompanhar"]
+  F -->|"Não"| H["Rever hipótese e alteração"]
+  H --> C

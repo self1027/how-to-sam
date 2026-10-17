@@ -1,0 +1,7 @@
+flowchart TD
+  A["Ponto de composição<br/>monta a aplicação"] -->|"DI: fornece implementação"| B["Caso de uso"]
+  B -->|"DIP: depende do contrato"| C["Contrato de repositório<br/>operações necessárias ao domínio"]
+  D["Implementação SQL"] -. "satisfaz o contrato" .-> C
+  E["Implementação em memória"] -. "satisfaz o contrato" .-> C
+  A -->|"escolhe"| D
+  A -. "pode substituir em teste" .-> E

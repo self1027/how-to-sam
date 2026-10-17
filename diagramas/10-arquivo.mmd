@@ -1,0 +1,10 @@
+flowchart TD
+  A["Definir corte de tempo<br/>e retenção do histórico"] --> B["Ler por páginas ou streams<br/>com buffers limitados"]
+  B --> C["Transformar e enviar ao S3<br/>respeitando backpressure"]
+  C --> D["Registrar manifesto<br/>faixa, contagem, local e integridade"]
+  D --> E["Testar leitura e recuperação"]
+  E --> F{"Dados íntegros<br/>e recuperáveis?"}
+  F -->|"Não"| G["Preservar origem<br/>e reconciliar exportação"]
+  G --> B
+  F -->|"Sim"| H["Remover ou marcar origem<br/>de forma retomável e idempotente"]
+  H --> I["Localizar histórico pelo catálogo<br/>ou regra determinística"]

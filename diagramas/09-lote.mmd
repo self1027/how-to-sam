@@ -1,0 +1,9 @@
+flowchart TD
+  A["Receber itens de trabalho duráveis"] --> B["Acumular lote limitado<br/>com prazo máximo de espera"]
+  B --> C{"Atingiu tamanho<br/>OU prazo máximo?"}
+  C -->|"Não"| B
+  C -->|"Sim"| D["Validar itens e gravar em lote<br/>com proteção de duplicidade"]
+  D --> E{"Resultado dos itens<br/>foi confirmado?"}
+  E -->|"Sim"| F["Confirmar mensagens concluídas"]
+  E -->|"Parcial / falha"| G["Identificar pendentes<br/>e repetir apenas com segurança"]
+  G --> A

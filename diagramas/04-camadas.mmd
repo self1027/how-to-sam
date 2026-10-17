@@ -1,0 +1,10 @@
+flowchart TD
+  A["Entrada HTTP ou evento"] --> B["Controller / fronteira<br/>converter protocolo e validar schema"]
+  B --> C{"Formato válido?"}
+  C -->|"Não"| D["Recusar antes dos efeitos"]
+  C -->|"Sim"| E["Service / caso de uso<br/>regras e coordenação"]
+  E --> F["Repository<br/>acesso à persistência"]
+  F --> G[("Banco de dados")]
+  E --> H["API pública de outro módulo<br/>exposta por contrato"]
+  E --> I["Resultado de negócio"]
+  I --> J["Controller mapeia a resposta"]

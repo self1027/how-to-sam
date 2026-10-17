@@ -1,0 +1,406 @@
+{
+  "title": "Guia de estudo — Node.js, arquitetura, IA e infraestrutura",
+  "createdDate": "2026-10-17",
+  "boardUrl": "https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s",
+  "pages": [
+    {
+      "id": "00",
+      "name": "00 · Comece aqui",
+      "title": "Como os assuntos se conectam",
+      "subtitle": "Leia de cima para baixo e use o menu de páginas para aprofundar cada capítulo.",
+      "source": [
+        "README.md"
+      ],
+      "diagrams": [
+        {
+          "id": "mapa",
+          "title": "Mapa do percurso de estudo",
+          "source": "flowchart TD\n  A[\"01–03 · RUNTIME E DIAGNÓSTICO<br/>Execução, memória, V8 e assincronismo\"] --> B[\"04 · DESENHO DA APLICAÇÃO<br/>Módulos, camadas e contratos\"]\n  B --> C[\"05–06 · CONSTRUÇÃO E ENTREGA<br/>Contexto para IA, testes e flags\"]\n  C --> D[\"07–08 · EXECUÇÃO CONFIÁVEL<br/>Infraestrutura, filas e outbox\"]\n  D --> E[\"09–10 · DADOS E CAPACIDADE<br/>Bancos, cache e histórico\"]\n  E --> F[\"11 · APLICAÇÃO PRÁTICA<br/>Webhook, dashboard e entrevistas\"]\n  F --> G[\"12 · REVISÃO DOS LIMITES<br/>Glossário e ajustes técnicos\"]\n  G -. \"Voltar ao conceito que ficou incerto\" .-> A",
+          "notes": [
+            "Em cada página: leia o fluxo, explique as decisões e responda à pergunta final.",
+            "Azul = execução · violeta = contratos · laranja = decisão · verde = resultado · vermelho = falha."
+          ]
+        }
+      ],
+      "question": "Você consegue explicar um webhook completo, do recebimento ao efeito de negócio, incluindo as falhas possíveis?"
+    },
+    {
+      "id": "01",
+      "name": "01 · Node.js e memória",
+      "title": "Node.js: execução, pilha e memória",
+      "subtitle": "Um mesmo event loop executa callbacks JavaScript um de cada vez; o processo pode ter outras threads.",
+      "source": [
+        "01-nodejs-memoria-e-execucao.md"
+      ],
+      "refs": [
+        {
+          "label": "Node.js · Event loop e worker pool",
+          "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop"
+        }
+      ],
+      "diagrams": [
+        {
+          "id": "runtime",
+          "title": "1 · Quem executa cada tipo de trabalho?",
+          "source": "flowchart TD\n  A[\"Código JavaScript<br/>executado pelo V8\"] --> B{\"Qual é o trabalho?\"}\n  B -->|\"Síncrono\"| C[\"Call stack da thread atual<br/>chamadas aninhadas: LIFO\"]\n  B -->|\"I/O assíncrono\"| D[\"APIs e bindings do Node.js\"]\n  D --> E[\"Rede: mecanismos do SO<br/>Tarefas específicas: pool da libuv\"]\n  E --> F[\"Conclusão sinalizada ao runtime\"]\n  F --> G[\"Callback ou continuação de Promise<br/>executa quando for agendado\"]\n  C --> H{\"Cálculo longo?\"}\n  H -->|\"Sim\"| I[\"Ocupa a thread atual<br/>outros callbacks esperam\"]\n  H -->|\"Não\"| G\n  I --> J[\"Limitar entrada ou deslocar CPU<br/>para pool de worker_threads\"]",
+          "notes": [
+            "Modelo conceitual: não representa a ordem completa das fases do event loop e das microtasks.",
+            "Aumentar o pool da libuv não distribui automaticamente um laço JavaScript."
+          ]
+        },
+        {
+          "id": "memoria",
+          "title": "2 · Por que o GC não libera tudo?",
+          "source": "flowchart TD\n  A[\"Referências mantidas pelo programa<br/>ex.: variável global ou closure\"] --> B[\"Map ou objeto ainda alcançável\"]\n  B --> C[\"Objetos referenciados no heap\"]\n  C --> D{\"Ainda há caminho<br/>a partir das raízes?\"}\n  D -->|\"Sim\"| E[\"GC preserva o objeto<br/>mesmo sem utilidade para o negócio\"]\n  D -->|\"Não\"| F[\"Objeto pode ser coletado<br/>sem prazo de liberação garantido\"]\n  E --> G[\"Aplicação descarta referências<br/>com limite, expiração ou delete\"]\n  G --> D",
+          "notes": [
+            "Uma cópia rasa cria outro objeto externo e pode compartilhar objetos internos.",
+            "Ciclos inteiramente inalcançáveis podem ser coletados; ciclo sozinho não prova vazamento."
+          ]
+        }
+      ],
+      "question": "Por que um Map global pode crescer apesar do GC? E por que evitar recursão não elimina o custo de CPU?"
+    },
+    {
+      "id": "02",
+      "name": "02 · V8 e desempenho",
+      "title": "V8, desempenho e tratamento de erros",
+      "subtitle": "Preserve o contrato correto e meça o caminho que realmente limita o sistema.",
+      "source": [
+        "02-v8-performance-e-erros.md"
+      ],
+      "diagrams": [
+        {
+          "id": "v8",
+          "title": "1 · Modelo conceitual de execução e otimização",
+          "source": "flowchart TD\n  A[\"Código JavaScript\"] --> B[\"Análise sintática e AST\"]\n  B --> C[\"Bytecode e execução<br/>Ignition: interpretação\"]\n  C --> D[\"Coleta de informações<br/>tipos, formatos e chamadas\"]\n  D --> E{\"Há oportunidade de<br/>compilar ou especializar?\"}\n  E -->|\"Sim\"| F[\"Possíveis compiladores<br/>Sparkplug · Maglev · TurboFan\"]\n  E -->|\"Ainda não\"| C\n  F --> G{\"Hipóteses continuam válidas?\"}\n  G -->|\"Sim\"| H[\"Executar caminho compilado\"]\n  G -->|\"Não\"| I[\"Outro caminho ou desotimização\"]\n  I --> D",
+          "notes": [
+            "Nem toda função passa por todos os compiladores; versão e plataforma alteram os caminhos.",
+            "Hidden classes descrevem formatos internos de objetos; interfaces TypeScript pertencem à checagem estática."
+          ]
+        },
+        {
+          "id": "decisao",
+          "title": "2 · Investigar antes de otimizar",
+          "source": "flowchart TD\n  A[\"Definir métrica e carga representativa\"] --> B[\"Separar aquecimento<br/>de medição em regime estável\"]\n  B --> C[\"Medir fluxo e etapas<br/>usar profiler onde necessário\"]\n  C --> D[\"Localizar gargalo real<br/>CPU, banco, rede ou serialização\"]\n  D --> E[\"Alterar uma hipótese por vez\"]\n  E --> F{\"Ganho no fluxo completo<br/>e comportamento preservado?\"}\n  F -->|\"Sim\"| G[\"Registrar evidência e acompanhar\"]\n  F -->|\"Não\"| H[\"Rever hipótese e alteração\"]\n  H --> C",
+          "notes": [
+            "Recusa de negócio esperada pode ser um resultado explícito; falha inesperada pode ser exceção.",
+            "throw, catch, spread e imutabilidade não possuem um custo universal: medir evita conclusões falsas."
+          ]
+        }
+      ],
+      "question": "Qual evidência justificaria mudar o formato de um objeto? Quando uma recusa deve aparecer no contrato de retorno?"
+    },
+    {
+      "id": "03",
+      "name": "03 · Async e observabilidade",
+      "title": "Assincronismo e observabilidade",
+      "subtitle": "Suspender a continuação de um fluxo é diferente de ocupar a thread com trabalho síncrono.",
+      "source": [
+        "03-assincronismo-e-observabilidade.md"
+      ],
+      "refs": [
+        {
+          "label": "Node.js · Event loop e worker pool",
+          "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop"
+        }
+      ],
+      "diagrams": [
+        {
+          "id": "await",
+          "title": "1 · O que acontece durante um await?",
+          "source": "sequenceDiagram\n  participant C as Chamador\n  participant F as Função async\n  participant I as I/O pendente\n  C->>F: chamar carregar()\n  F->>F: executar trecho síncrono\n  F->>I: iniciar operação\n  F-->>C: devolver Promise pendente\n  Note over C,F: await suspende a continuação de F\n  C->>C: outros callbacks podem executar\n  I-->>F: operação termina\n  Note over F: continuação é agendada\n  F->>F: retomar após await\n  F-->>C: resolver Promise",
+          "notes": [
+            "CPU antes da suspensão ocupa a thread atual; async e Promise.resolve não criam paralelismo.",
+            "Promise.all permite esperas concorrentes; limite a concorrência e lembre que rejeitar não cancela as outras operações."
+          ]
+        },
+        {
+          "id": "metricas",
+          "title": "2 · Da métrica à decisão de engenharia",
+          "source": "flowchart TD\n  A[\"Instrumentar o fluxo completo<br/>e as fronteiras relevantes\"] --> B[\"Logs: ocorrência<br/>Métricas: frequência e intensidade<br/>Traces: caminho e tempo por etapa\"]\n  B --> C[\"Comparar volume, erros<br/>P50, P95, P99 e recursos\"]\n  C --> D{\"Onde está o atraso?\"}\n  D -->|\"CPU / event loop\"| E[\"Profiler e tamanho das entradas\"]\n  D -->|\"Banco / parceiro\"| F[\"Consultas, pools, timeouts<br/>e duração da dependência\"]\n  D -->|\"Fila\"| G[\"Espera, processamento<br/>e idade da mensagem mais antiga\"]\n  E --> H[\"Hipótese → mudança → comparação\"]\n  F --> H\n  G --> H",
+          "notes": [
+            "P95 = posição na distribuição das observações; não é média nem percentual direto de usuários.",
+            "Não some P95 das etapas para obter P95 total. Meça também a duração do fluxo completo."
+          ]
+        }
+      ],
+      "question": "Uma API responde rápido, mas os usuários recebem notificações atrasadas. Quais três tempos você mediria?"
+    },
+    {
+      "id": "04",
+      "name": "04 · Módulos e contratos",
+      "title": "Arquitetura modular e contratos",
+      "subtitle": "Módulos agrupam capacidades de negócio; camadas separam responsabilidades dentro de cada módulo.",
+      "source": [
+        "04-arquitetura-modular-e-contratos.md"
+      ],
+      "diagrams": [
+        {
+          "id": "camadas",
+          "title": "1 · Caminho de uma requisição",
+          "source": "flowchart TD\n  A[\"Entrada HTTP ou evento\"] --> B[\"Controller / fronteira<br/>converter protocolo e validar schema\"]\n  B --> C{\"Formato válido?\"}\n  C -->|\"Não\"| D[\"Recusar antes dos efeitos\"]\n  C -->|\"Sim\"| E[\"Service / caso de uso<br/>regras e coordenação\"]\n  E --> F[\"Repository<br/>acesso à persistência\"]\n  F --> G[(\"Banco de dados\")]\n  E --> H[\"API pública de outro módulo<br/>exposta por contrato\"]\n  E --> I[\"Resultado de negócio\"]\n  I --> J[\"Controller mapeia a resposta\"]",
+          "notes": [
+            "Schema verifica formato em runtime; autorização, saldo e outras regras dependem do domínio.",
+            "Uma pasta não cria isolamento: outros módulos devem respeitar a API pública e seus limites."
+          ]
+        },
+        {
+          "id": "di",
+          "title": "2 · DI e DIP vistos separadamente",
+          "source": "flowchart TD\n  A[\"Ponto de composição<br/>monta a aplicação\"] -->|\"DI: fornece implementação\"| B[\"Caso de uso\"]\n  B -->|\"DIP: depende do contrato\"| C[\"Contrato de repositório<br/>operações necessárias ao domínio\"]\n  D[\"Implementação SQL\"] -. \"satisfaz o contrato\" .-> C\n  E[\"Implementação em memória\"] -. \"satisfaz o contrato\" .-> C\n  A -->|\"escolhe\"| D\n  A -. \"pode substituir em teste\" .-> E",
+          "notes": [
+            "DI pode usar funções e parâmetros. DIP orienta as dependências entre regras e detalhes.",
+            "Tipos estáticos não validam JSON em runtime; separar um serviço também introduz falhas de rede e novas garantias."
+          ]
+        }
+      ],
+      "question": "Como trocar o repositório sem mudar a regra? O que muda quando uma chamada local passa a atravessar a rede?"
+    },
+    {
+      "id": "05",
+      "name": "05 · Desenvolvimento com IA",
+      "title": "IA: contexto, tarefas e aprendizado",
+      "subtitle": "Uma tarefa útil declara comportamento observável, contexto relevante e critério de conclusão.",
+      "source": [
+        "05-ia-contexto-guidelines-e-tarefas.md"
+      ],
+      "diagrams": [
+        {
+          "id": "ciclo",
+          "title": "Do problema de produto ao aprendizado",
+          "source": "flowchart TD\n  A[\"Dor de produto<br/>e comportamento atual\"] --> B[\"Definir resultado e aceitação<br/>incluir efeitos que não podem ocorrer\"]\n  B --> C[\"Preparar contexto do módulo<br/>entry points, contratos e dependências\"]\n  C --> D[\"Consultar orientações aplicáveis<br/>memória, guidelines e skills\"]\n  D --> E[\"Implementar tarefa delimitada\"]\n  E --> F[\"Validar comportamento<br/>testes e revisão com evidências\"]\n  F --> G{\"Critérios foram atendidos?\"}\n  G -->|\"Não\"| E\n  G -->|\"Sim\"| H[\"Publicar gradualmente\"]\n  H --> I[\"Observar qualidade, retrabalho<br/>incidentes e tempo de entrega\"]\n  I --> J[\"Atualizar contexto e próximas tarefas\"]\n  J -. \"aprendizado\" .-> A",
+          "notes": [
+            "Guideline guarda regras recorrentes; tarefa descreve a mudança; skill organiza um procedimento reutilizável.",
+            "O recorte deve incluir dependências relevantes. A prioridade das instruções depende da ferramenta e da autoridade, não só da pasta."
+          ]
+        }
+      ],
+      "question": "Que evidência demonstraria que a IA melhorou a entrega, além de gerar mais código ou PRs?"
+    },
+    {
+      "id": "06",
+      "name": "06 · Testes e entrega",
+      "title": "Verificação e entrega gradual",
+      "subtitle": "Teste o comportamento que importa e planeje como observar e recuperar uma mudança.",
+      "source": [
+        "06-testes-feature-flags-e-entrega.md"
+      ],
+      "diagrams": [
+        {
+          "id": "contrato",
+          "title": "1 · Validar uma integração externa",
+          "source": "flowchart TD\n  A[\"Chamada ao parceiro<br/>com timeout definido\"] --> B{\"Status HTTP aceitável?\"}\n  B -->|\"Não\"| C[\"Registrar contexto e classificar falha\"]\n  B -->|\"Sim\"| D[\"Ler JSON como dado desconhecido\"]\n  D --> E{\"Schema válido?\"}\n  E -->|\"Não\"| C\n  E -->|\"Sim\"| F[\"Conferir correlação e regra<br/>ID, valor e autorização\"]\n  F --> G[\"Continuar com dado validado\"]\n  C --> H{\"Nova tentativa é segura?\"}\n  H -->|\"Transitória e idempotente\"| I[\"Retry limitado e com espera\"]\n  H -->|\"Não / efeito incerto\"| J[\"Falhar ou reconciliar estado\"]",
+          "notes": [
+            "TypeScript não garante o formato da resposta em execução. Schema não substitui todas as regras de negócio.",
+            "Teste com banco descartável e substitutos controlados de terceiros; garanta limpeza de recursos também em falhas."
+          ]
+        },
+        {
+          "id": "release",
+          "title": "2 · Deploy não é exposição ao público",
+          "source": "flowchart TD\n  A[\"Testar regra, integração<br/>contratos e falhas relevantes\"] --> B[\"Deploy compatível<br/>flag inicialmente desativada\"]\n  B --> C[\"Ativar para grupo piloto estável\"]\n  C --> D[\"Comparar erros, latência<br/>e resultado de negócio\"]\n  D --> E{\"Resultado aceitável?\"}\n  E -->|\"Sim\"| F[\"Ampliar exposição gradualmente\"]\n  F --> G[\"Concluir rollout<br/>e remover flag temporária\"]\n  E -->|\"Não\"| H[\"Desativar exposição<br/>e investigar os efeitos já ocorridos\"]\n  H --> I[\"Corrigir ou reconciliar dados\"]\n  I --> A",
+          "notes": [
+            "Desligar uma flag não desfaz migrações nem efeitos persistidos.",
+            "Fallback de leitura pode ser aceitável; fallback de cobrança exige idempotência e reconciliação do estado incerto."
+          ]
+        }
+      ],
+      "question": "Se houve timeout após uma cobrança, por que chamar a versão antiga em um catch pode duplicar o efeito?"
+    },
+    {
+      "id": "07",
+      "name": "07 · Infraestrutura",
+      "title": "Escolher onde executar Node.js",
+      "subtitle": "Árvore de avaliação didática: as opções podem se combinar e dependem da carga e da equipe.",
+      "source": [
+        "07-infraestrutura-nodejs-na-aws.md"
+      ],
+      "diagrams": [
+        {
+          "id": "infra",
+          "title": "Da necessidade ao modelo de execução",
+          "source": "flowchart TD\n  A[\"Definir carga, latência<br/>estado, custo e capacidade da equipe\"] --> B{\"Prioridade: plataforma web<br/>com entrega rápida?\"}\n  B -->|\"Sim\"| C[\"Avaliar plataforma de aplicação<br/>ex.: Vercel\"]\n  B -->|\"Não / insuficiente\"| D{\"Evento e tarefa delimitada<br/>cabem no modelo da função?\"}\n  D -->|\"Sim\"| E[\"Avaliar Lambda<br/>inicialização, quotas e concorrência\"]\n  D -->|\"Não\"| F{\"API ou worker duradouro<br/>empacotado em container?\"}\n  F -->|\"Sim\"| G[\"Avaliar ECS + Fargate<br/>serviços, rede e políticas de escala\"]\n  F -->|\"Não / precisa de VM\"| H[\"Avaliar EC2 + PM2<br/>operar SO, máquina e processos\"]\n  G --> I{\"Há necessidade concreta<br/>do ecossistema Kubernetes?\"}\n  I -->|\"Sim e equipe preparada\"| J[\"Comparar EKS e custo operacional\"]\n  I -->|\"Não\"| K[\"Manter operação proporcional\"]\n  C --> L[\"Validar interrupção, estado externo<br/>orçamento de conexões e recuperação\"]\n  E --> L\n  H --> L\n  J --> L\n  K --> L",
+          "notes": [
+            "Serverless abstrai servidores; stateless evita depender de estado local indispensável entre atendimentos.",
+            "Cada processo tem seu heap. Lambda pode reutilizar memória e containers podem ser substituídos: a correção deve tolerar ambos."
+          ]
+        }
+      ],
+      "question": "Se a quantidade de instâncias dobrar, qual dependência pode limitar o ganho e como você a protegeria?"
+    },
+    {
+      "id": "08",
+      "name": "08 · Filas e outbox",
+      "title": "Filas e processamento confiável",
+      "subtitle": "Fila desacopla aceitação de execução; garantias dependem de persistência, confirmação e consumidor.",
+      "source": [
+        "08-filas-bullmq-sqs-e-outbox.md"
+      ],
+      "refs": [
+        {
+          "label": "AWS · Transactional outbox",
+          "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+        }
+      ],
+      "diagrams": [
+        {
+          "id": "outbox",
+          "title": "1 · Outbox: resolver a escrita dupla",
+          "source": "sequenceDiagram\n  participant A as API\n  participant B as Banco + outbox\n  participant P as Publicador\n  participant Q as Fila\n  A->>B: BEGIN: negócio + evento\n  A->>B: COMMIT da transação local\n  B-->>A: commit confirmado\n  Note over A,B: aceite só após registro durável\n  P->>B: ler eventos pendentes\n  P->>Q: publicar evento com ID estável\n  Q-->>P: publicação reconhecida\n  P->>B: marcar evento como publicado\n  Note over P,Q: queda antes da marca pode gerar reenvio",
+          "notes": [
+            "A transação local une alteração de negócio e registro do evento; publicar na fila continua sendo uma etapa posterior.",
+            "Outbox evita esquecer a publicação após o commit. Duplicatas continuam possíveis e o consumidor precisa ser idempotente."
+          ]
+        },
+        {
+          "id": "worker",
+          "title": "2 · Repetir o trabalho sem duplicar o efeito",
+          "source": "flowchart TD\n  A[\"Receber mensagem<br/>com ID estável da operação\"] --> B[\"Coordenar idempotência atomicamente<br/>e consultar estado da operação\"]\n  B --> C{\"Efeito já confirmado?\"}\n  C -->|\"Sim\"| D[\"Confirmar / remover mensagem<br/>sem reaplicar o efeito\"]\n  C -->|\"Não\"| E[\"Executar com limites de concorrência<br/>e idempotência no provedor, se houver\"]\n  E --> F{\"Resultado conhecido?\"}\n  F -->|\"Sucesso\"| G[\"Persistir conclusão<br/>depois confirmar mensagem\"]\n  F -->|\"Efeito remoto incerto\"| H[\"Consultar ou reconciliar estado<br/>antes de repetir\"]\n  F -->|\"Falha conhecida\"| I{\"Transitória e dentro<br/>da política de tentativas?\"}\n  I -->|\"Sim\"| J[\"Retry com backoff\"]\n  J --> A\n  I -->|\"Não\"| K[\"Falha definitiva ou DLQ<br/>diagnóstico e reprocessamento controlado\"]\n  H --> B",
+          "notes": [
+            "jobId ou chave adquirida não resolve sozinho falhas após um efeito externo. O protocolo precisa de estados e recuperação.",
+            "Meça entrada, saída, idade do backlog, tentativas e DLQ. A fila não absorve excesso permanente de demanda."
+          ]
+        },
+        {
+          "id": "fanout",
+          "title": "3 · Fila de trabalho e distribuição para assinantes",
+          "source": "flowchart TD\n  A[\"Fila de trabalho\"] --> B[\"Worker 1 ou Worker 2<br/>consumidores concorrentes\"]\n  B --> C[\"Distribuir jobs entre workers\"]\n  D[\"Evento publicado em tópico\"] --> E[\"Fila exclusiva do faturamento\"]\n  D --> F[\"Fila exclusiva de notificações\"]\n  E --> G[\"Consumidor de faturamento\"]\n  F --> H[\"Consumidor de notificações\"]",
+          "notes": [
+            "Dois serviços na mesma fila de trabalho não recebem necessariamente todos os mesmos eventos.",
+            "BullMQ depende de Redis configurado para fila: persistência, retenção e noeviction. SQS Standard admite duplicidade e reordenação."
+          ]
+        }
+      ],
+      "question": "O que acontece se o efeito é concluído, mas o worker cai antes da confirmação? Qual métrica revela atraso de negócio?"
+    },
+    {
+      "id": "09",
+      "name": "09 · Bancos e escala",
+      "title": "Dados, consistência e capacidade",
+      "subtitle": "Comece pelos acessos e garantias; aumentar workers também aumenta a pressão sobre o banco.",
+      "source": [
+        "09-bancos-de-dados-e-escalabilidade.md"
+      ],
+      "refs": [
+        {
+          "label": "AWS · TTL do DynamoDB",
+          "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html"
+        }
+      ],
+      "diagrams": [
+        {
+          "id": "banco",
+          "title": "1 · Escolher pelo padrão de acesso",
+          "source": "flowchart TD\n  A[\"Listar consultas, escritas<br/>transações e consistência exigida\"] --> B{\"Que acesso predomina?\"}\n  B -->|\"Relações e transações\"| C[\"Avaliar banco relacional<br/>RDS / Aurora conforme requisitos\"]\n  B -->|\"Agregados em documentos\"| D[\"Avaliar MongoDB<br/>incorporar, referenciar e indexar\"]\n  B -->|\"Chaves e acessos conhecidos\"| E[\"Avaliar DynamoDB<br/>chaves, índices e paginação\"]\n  C --> F[\"Medir planos, índices<br/>locks, pools, I/O e CPU\"]\n  D --> F\n  E --> F\n  F --> G{\"Qual recurso limita?\"}\n  G -->|\"Leituras\"| H[\"Consulta, índice, cache<br/>ou réplicas com atraso considerado\"]\n  G -->|\"Escritas\"| I[\"Lotes, transações e capacidade<br/>avaliar distribuição só com evidência\"]",
+          "notes": [
+            "Réplicas de leitura não distribuem automaticamente as escritas; sharding acrescenta roteamento e garantias distribuídas.",
+            "Aurora é compatível com MySQL ou PostgreSQL. Multi-AZ envolve zonas de uma região."
+          ]
+        },
+        {
+          "id": "lote",
+          "title": "2 · Escrever em lote sem esperar indefinidamente",
+          "source": "flowchart TD\n  A[\"Receber itens de trabalho duráveis\"] --> B[\"Acumular lote limitado<br/>com prazo máximo de espera\"]\n  B --> C{\"Atingiu tamanho<br/>OU prazo máximo?\"}\n  C -->|\"Não\"| B\n  C -->|\"Sim\"| D[\"Validar itens e gravar em lote<br/>com proteção de duplicidade\"]\n  D --> E{\"Resultado dos itens<br/>foi confirmado?\"}\n  E -->|\"Sim\"| F[\"Confirmar mensagens concluídas\"]\n  E -->|\"Parcial / falha\"| G[\"Identificar pendentes<br/>e repetir apenas com segurança\"]\n  G --> A",
+          "notes": [
+            "Lote reduz viagens e custo por comando; não significa juntar todos os eventos em uma linha.",
+            "A origem do trabalho deve continuar durável até o sucesso. Falhas parciais e efeitos adicionais exigem tratamento explícito."
+          ]
+        },
+        {
+          "id": "ttl",
+          "title": "3 · Expiração lógica e limpeza física",
+          "source": "flowchart TD\n  A[\"Ler registro DynamoDB\"] --> B{\"Existe e expiresAt<br/>é maior que agora?\"}\n  B -->|\"Sim\"| C[\"Registro ainda vigente<br/>aplicar a regra de negócio\"]\n  B -->|\"Não\"| D[\"Tratar como ausente ou expirado<br/>mesmo se o item continuar na tabela\"]\n  E[\"Limpeza TTL do DynamoDB<br/>processo assíncrono\"] -. \"remove posteriormente\" .-> F[\"Item expirado deixa de existir\"]\n  D -. \"independe da remoção física\" .-> E",
+          "notes": [
+            "expiresAt usa timestamp Unix em segundos no mecanismo TTL do DynamoDB.",
+            "Para idempotência, leia-e-grave não oferece atomicidade; use escrita condicional e protocolo para efeitos incertos."
+          ]
+        }
+      ],
+      "question": "Por que baixo uso de CPU não prova folga no banco? E por que um item expirado ainda pode ser lido?"
+    },
+    {
+      "id": "10",
+      "name": "10 · Cache e histórico",
+      "title": "Cache, S3 e dados históricos",
+      "subtitle": "A política de atualização e a recuperação dos dados fazem parte da correção.",
+      "source": [
+        "10-cache-s3-e-base-fria.md"
+      ],
+      "diagrams": [
+        {
+          "id": "cache",
+          "title": "1 · Cache-aside e proteção da origem",
+          "source": "flowchart TD\n  A[\"Montar chave correta<br/>empresa, período, filtros e permissão\"] --> B[\"Consultar cache\"]\n  B --> C{\"Entrada presente e válida?\"}\n  C -->|\"Sim\"| D[\"Devolver resultado reutilizado\"]\n  C -->|\"Não\"| E[\"Coordenar recomputação da chave<br/>para limitar cache stampede\"]\n  E --> F[\"Consultar fonte com limites\"]\n  F --> G[\"Guardar resultado com TTL<br/>e política de capacidade\"]\n  G --> H[\"Devolver resultado\"]\n  I[\"Alteração na origem\"] -. \"invalidar ou aceitar defasagem permitida\" .-> B",
+          "notes": [
+            "TTL deve refletir o atraso aceito pelo produto. Um cache local só coordena a própria instância.",
+            "Observe acerto, erros e consultas na origem. O primeiro acesso e a expiração simultânea ainda precisam de proteção."
+          ]
+        },
+        {
+          "id": "arquivo",
+          "title": "2 · Arquivar com recuperação verificável",
+          "source": "flowchart TD\n  A[\"Definir corte de tempo<br/>e retenção do histórico\"] --> B[\"Ler por páginas ou streams<br/>com buffers limitados\"]\n  B --> C[\"Transformar e enviar ao S3<br/>respeitando backpressure\"]\n  C --> D[\"Registrar manifesto<br/>faixa, contagem, local e integridade\"]\n  D --> E[\"Testar leitura e recuperação\"]\n  E --> F{\"Dados íntegros<br/>e recuperáveis?\"}\n  F -->|\"Não\"| G[\"Preservar origem<br/>e reconciliar exportação\"]\n  G --> B\n  F -->|\"Sim\"| H[\"Remover ou marcar origem<br/>de forma retomável e idempotente\"]\n  H --> I[\"Localizar histórico pelo catálogo<br/>ou regra determinística\"]",
+          "notes": [
+            "S3 armazena objetos; Athena consulta dados, frequentemente em S3. A escolha depende do acesso esperado.",
+            "Stream controla buffers; paginação limita porções de consulta. Backpressure faz o produtor respeitar o consumidor."
+          ]
+        }
+      ],
+      "question": "O que deve ser conferido antes de apagar a origem? Qual é o risco de uma chave de cache incompleta?"
+    },
+    {
+      "id": "11",
+      "name": "11 · Casos integrados",
+      "title": "Conectar os capítulos em decisões",
+      "subtitle": "Estudos de caso didáticos: identifique garantias, falhas e evidências para validar a solução.",
+      "source": [
+        "11-revisao-exercicios-e-entrevistas.md",
+        "03-assincronismo-e-observabilidade.md",
+        "08-filas-bullmq-sqs-e-outbox.md",
+        "10-cache-s3-e-base-fria.md"
+      ],
+      "diagrams": [
+        {
+          "id": "webhook",
+          "title": "1 · Webhook de pagamento: do aceite ao resultado",
+          "source": "flowchart TD\n  A[\"Provedor envia evento<br/>pode repetir e chegar em pico\"] --> B[\"API valida origem, assinatura<br/>schema e ID estável\"]\n  B --> C{\"Evento válido?\"}\n  C -->|\"Não\"| D[\"Recusar sem efeitos de negócio\"]\n  C -->|\"Sim\"| E[\"Transação local<br/>registrar recepção + evento na outbox\"]\n  E --> F[\"Commit confirmado\"]\n  F --> G[\"Responder aceite ao provedor\"]\n  F --> H[\"Publicador envia evento à fila<br/>e marca envio após reconhecimento\"]\n  H --> I[\"Worker com concorrência limitada<br/>e protocolo de idempotência\"]\n  I --> J{\"Efeito já aplicado<br/>ou estado remoto incerto?\"}\n  J -->|\"Sim\"| K[\"Consultar estado e reconciliar<br/>sem duplicar o efeito\"]\n  J -->|\"Não\"| L[\"Executar regra e persistir resultado\"]\n  K --> M[\"Confirmar somente após conclusão<br/>ou encaminhar falha para tratamento\"]\n  L --> M\n  M --> N[\"Medir aceite, espera na fila<br/>processamento, erros e tempo total\"]",
+          "notes": [
+            "O aceite não prova conclusão. Recepção repetida deve reutilizar a identidade e não duplicar o efeito.",
+            "Teste queda após commit, reenvio do publicador, duplicidade concorrente e timeout após efeito remoto."
+          ]
+        },
+        {
+          "id": "dashboard",
+          "title": "2 · Dashboard lento: investigação e alternativas",
+          "source": "flowchart TD\n  A[\"Relatório ficou lento\"] --> B[\"Medir consulta e plano<br/>volume lido, filtros e paginação\"]\n  B --> C[\"Corrigir consulta e índice<br/>medir novamente\"]\n  C --> D{\"Ainda há pressão<br/>na carga operacional?\"}\n  D -->|\"Não\"| E[\"Acompanhar latência e crescimento\"]\n  D -->|\"Sim\"| F{\"Qual compromisso<br/>o produto aceita?\"}\n  F -->|\"Resultado reutilizável\"| G[\"Cache ou agregação<br/>com atraso declarado\"]\n  F -->|\"Separar leituras\"| H[\"Réplica ou modelo de leitura<br/>considerando atraso e operação\"]\n  F -->|\"Histórico pouco acessado\"| I[\"Arquivar com catálogo<br/>integridade e recuperação\"]\n  G --> J[\"Comparar resultado, custo<br/>consistência e recuperação\"]\n  H --> J\n  I --> J",
+          "notes": [
+            "Antes de sharding, investigue o trabalho real. Quantidade de linhas sozinha não define a solução.",
+            "Para entrevistas: explique contexto → decisão → compromisso → evidência; diferencie laboratório de experiência em produção."
+          ]
+        }
+      ],
+      "question": "Defenda duas soluções para o mesmo caso e diga qual evidência faria você mudar de escolha."
+    },
+    {
+      "id": "12",
+      "name": "12 · Revisão e glossário",
+      "title": "Revisar conceitos sem generalizações",
+      "subtitle": "Conecte comportamento, causa, compromisso e verificação antes de memorizar ferramentas.",
+      "source": [
+        "12-ajustes-tecnicos-e-glossario.md"
+      ],
+      "diagrams": [
+        {
+          "id": "conceitos",
+          "title": "Mapa das distinções que sustentam o guia",
+          "source": "flowchart TD\n  A[\"Qual pergunta você precisa responder?\"] --> B[\"Execução<br/>concorrência ≠ paralelismo<br/>await ≠ bloqueio por CPU\"]\n  A --> C[\"Dependências<br/>DI = fornecer implementação<br/>DIP = orientar por contratos\"]\n  A --> D[\"Confiabilidade<br/>aceite ≠ conclusão<br/>outbox ≠ exatamente uma vez\"]\n  A --> E[\"Dados<br/>validade lógica ≠ remoção física<br/>réplica ≠ sharding\"]\n  A --> F[\"Operação<br/>serverless ≠ stateless<br/>deploy ≠ release\"]\n  B --> G[\"Verificar com exemplo, medição<br/>teste de falha ou contrato\"]\n  C --> G\n  D --> G\n  E --> G\n  F --> G\n  G --> H[\"Explicar o limite e a alternativa<br/>sem prometer garantias universais\"]",
+          "notes": [
+            "Heap: alocações e referências · GC: coleta do inalcançável · backlog: trabalho pendente · DLQ: falhas que exigem atenção.",
+            "Throughput: trabalho por tempo · latência: tempo entre pontos · backpressure: produção conforme consumo · TTL: validade / expiração."
+          ]
+        }
+      ],
+      "question": "Escolha uma afirmação do capítulo 12, explique o erro e desenhe um contraexemplo antes de consultar o gabarito."
+    }
+  ]
+}

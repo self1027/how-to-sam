@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant A as API
+  participant B as Banco + outbox
+  participant P as Publicador
+  participant Q as Fila
+  A->>B: BEGIN: negócio + evento
+  A->>B: COMMIT da transação local
+  B-->>A: commit confirmado
+  Note over A,B: aceite só após registro durável
+  P->>B: ler eventos pendentes
+  P->>Q: publicar evento com ID estável
+  Q-->>P: publicação reconhecida
+  P->>B: marcar evento como publicado
+  Note over P,Q: queda antes da marca pode gerar reenvio

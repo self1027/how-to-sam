@@ -1,0 +1,11 @@
+flowchart TD
+  A["Código JavaScript<br/>executado pelo V8"] --> B{"Qual é o trabalho?"}
+  B -->|"Síncrono"| C["Call stack da thread atual<br/>chamadas aninhadas: LIFO"]
+  B -->|"I/O assíncrono"| D["APIs e bindings do Node.js"]
+  D --> E["Rede: mecanismos do SO<br/>Tarefas específicas: pool da libuv"]
+  E --> F["Conclusão sinalizada ao runtime"]
+  F --> G["Callback ou continuação de Promise<br/>executa quando for agendado"]
+  C --> H{"Cálculo longo?"}
+  H -->|"Sim"| I["Ocupa a thread atual<br/>outros callbacks esperam"]
+  H -->|"Não"| G
+  I --> J["Limitar entrada ou deslocar CPU<br/>para pool de worker_threads"]

@@ -1,0 +1,12 @@
+flowchart TD
+  A["Dor de produto<br/>e comportamento atual"] --> B["Definir resultado e aceitação<br/>incluir efeitos que não podem ocorrer"]
+  B --> C["Preparar contexto do módulo<br/>entry points, contratos e dependências"]
+  C --> D["Consultar orientações aplicáveis<br/>memória, guidelines e skills"]
+  D --> E["Implementar tarefa delimitada"]
+  E --> F["Validar comportamento<br/>testes e revisão com evidências"]
+  F --> G{"Critérios foram atendidos?"}
+  G -->|"Não"| E
+  G -->|"Sim"| H["Publicar gradualmente"]
+  H --> I["Observar qualidade, retrabalho<br/>incidentes e tempo de entrega"]
+  I --> J["Atualizar contexto e próximas tarefas"]
+  J -. "aprendizado" .-> A

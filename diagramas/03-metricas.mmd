@@ -1,0 +1,10 @@
+flowchart TD
+  A["Instrumentar o fluxo completo<br/>e as fronteiras relevantes"] --> B["Logs: ocorrência<br/>Métricas: frequência e intensidade<br/>Traces: caminho e tempo por etapa"]
+  B --> C["Comparar volume, erros<br/>P50, P95, P99 e recursos"]
+  C --> D{"Onde está o atraso?"}
+  D -->|"CPU / event loop"| E["Profiler e tamanho das entradas"]
+  D -->|"Banco / parceiro"| F["Consultas, pools, timeouts<br/>e duração da dependência"]
+  D -->|"Fila"| G["Espera, processamento<br/>e idade da mensagem mais antiga"]
+  E --> H["Hipótese → mudança → comparação"]
+  F --> H
+  G --> H

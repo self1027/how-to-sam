@@ -1,0 +1,11 @@
+flowchart TD
+  A["Listar consultas, escritas<br/>transações e consistência exigida"] --> B{"Que acesso predomina?"}
+  B -->|"Relações e transações"| C["Avaliar banco relacional<br/>RDS / Aurora conforme requisitos"]
+  B -->|"Agregados em documentos"| D["Avaliar MongoDB<br/>incorporar, referenciar e indexar"]
+  B -->|"Chaves e acessos conhecidos"| E["Avaliar DynamoDB<br/>chaves, índices e paginação"]
+  C --> F["Medir planos, índices<br/>locks, pools, I/O e CPU"]
+  D --> F
+  E --> F
+  F --> G{"Qual recurso limita?"}
+  G -->|"Leituras"| H["Consulta, índice, cache<br/>ou réplicas com atraso considerado"]
+  G -->|"Escritas"| I["Lotes, transações e capacidade<br/>avaliar distribuição só com evidência"]

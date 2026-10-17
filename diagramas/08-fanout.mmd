@@ -1,0 +1,7 @@
+flowchart TD
+  A["Fila de trabalho"] --> B["Worker 1 ou Worker 2<br/>consumidores concorrentes"]
+  B --> C["Distribuir jobs entre workers"]
+  D["Evento publicado em tópico"] --> E["Fila exclusiva do faturamento"]
+  D --> F["Fila exclusiva de notificações"]
+  E --> G["Consumidor de faturamento"]
+  F --> H["Consumidor de notificações"]

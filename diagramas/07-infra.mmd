@@ -1,0 +1,16 @@
+flowchart TD
+  A["Definir carga, latência<br/>estado, custo e capacidade da equipe"] --> B{"Prioridade: plataforma web<br/>com entrega rápida?"}
+  B -->|"Sim"| C["Avaliar plataforma de aplicação<br/>ex.: Vercel"]
+  B -->|"Não / insuficiente"| D{"Evento e tarefa delimitada<br/>cabem no modelo da função?"}
+  D -->|"Sim"| E["Avaliar Lambda<br/>inicialização, quotas e concorrência"]
+  D -->|"Não"| F{"API ou worker duradouro<br/>empacotado em container?"}
+  F -->|"Sim"| G["Avaliar ECS + Fargate<br/>serviços, rede e políticas de escala"]
+  F -->|"Não / precisa de VM"| H["Avaliar EC2 + PM2<br/>operar SO, máquina e processos"]
+  G --> I{"Há necessidade concreta<br/>do ecossistema Kubernetes?"}
+  I -->|"Sim e equipe preparada"| J["Comparar EKS e custo operacional"]
+  I -->|"Não"| K["Manter operação proporcional"]
+  C --> L["Validar interrupção, estado externo<br/>orçamento de conexões e recuperação"]
+  E --> L
+  H --> L
+  J --> L
+  K --> L

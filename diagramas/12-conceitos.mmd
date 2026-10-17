@@ -1,0 +1,12 @@
+flowchart TD
+  A["Qual pergunta você precisa responder?"] --> B["Execução<br/>concorrência ≠ paralelismo<br/>await ≠ bloqueio por CPU"]
+  A --> C["Dependências<br/>DI = fornecer implementação<br/>DIP = orientar por contratos"]
+  A --> D["Confiabilidade<br/>aceite ≠ conclusão<br/>outbox ≠ exatamente uma vez"]
+  A --> E["Dados<br/>validade lógica ≠ remoção física<br/>réplica ≠ sharding"]
+  A --> F["Operação<br/>serverless ≠ stateless<br/>deploy ≠ release"]
+  B --> G["Verificar com exemplo, medição<br/>teste de falha ou contrato"]
+  C --> G
+  D --> G
+  E --> G
+  F --> G
+  G --> H["Explicar o limite e a alternativa<br/>sem prometer garantias universais"]

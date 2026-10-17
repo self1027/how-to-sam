@@ -1,0 +1,11 @@
+flowchart TD
+  A["Chamada ao parceiro<br/>com timeout definido"] --> B{"Status HTTP aceitável?"}
+  B -->|"Não"| C["Registrar contexto e classificar falha"]
+  B -->|"Sim"| D["Ler JSON como dado desconhecido"]
+  D --> E{"Schema válido?"}
+  E -->|"Não"| C
+  E -->|"Sim"| F["Conferir correlação e regra<br/>ID, valor e autorização"]
+  F --> G["Continuar com dado validado"]
+  C --> H{"Nova tentativa é segura?"}
+  H -->|"Transitória e idempotente"| I["Retry limitado e com espera"]
+  H -->|"Não / efeito incerto"| J["Falhar ou reconciliar estado"]

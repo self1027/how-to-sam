@@ -1,0 +1,11 @@
+flowchart TD
+  A["Código JavaScript"] --> B["Análise sintática e AST"]
+  B --> C["Bytecode e execução<br/>Ignition: interpretação"]
+  C --> D["Coleta de informações<br/>tipos, formatos e chamadas"]
+  D --> E{"Há oportunidade de<br/>compilar ou especializar?"}
+  E -->|"Sim"| F["Possíveis compiladores<br/>Sparkplug · Maglev · TurboFan"]
+  E -->|"Ainda não"| C
+  F --> G{"Hipóteses continuam válidas?"}
+  G -->|"Sim"| H["Executar caminho compilado"]
+  G -->|"Não"| I["Outro caminho ou desotimização"]
+  I --> D

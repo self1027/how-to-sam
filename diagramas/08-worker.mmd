@@ -1,0 +1,13 @@
+flowchart TD
+  A["Receber mensagem<br/>com ID estável da operação"] --> B["Coordenar idempotência atomicamente<br/>e consultar estado da operação"]
+  B --> C{"Efeito já confirmado?"}
+  C -->|"Sim"| D["Confirmar / remover mensagem<br/>sem reaplicar o efeito"]
+  C -->|"Não"| E["Executar com limites de concorrência<br/>e idempotência no provedor, se houver"]
+  E --> F{"Resultado conhecido?"}
+  F -->|"Sucesso"| G["Persistir conclusão<br/>depois confirmar mensagem"]
+  F -->|"Efeito remoto incerto"| H["Consultar ou reconciliar estado<br/>antes de repetir"]
+  F -->|"Falha conhecida"| I{"Transitória e dentro<br/>da política de tentativas?"}
+  I -->|"Sim"| J["Retry com backoff"]
+  J --> A
+  I -->|"Não"| K["Falha definitiva ou DLQ<br/>diagnóstico e reprocessamento controlado"]
+  H --> B

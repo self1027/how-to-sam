@@ -1,0 +1,10 @@
+flowchart TD
+  A["Testar regra, integração<br/>contratos e falhas relevantes"] --> B["Deploy compatível<br/>flag inicialmente desativada"]
+  B --> C["Ativar para grupo piloto estável"]
+  C --> D["Comparar erros, latência<br/>e resultado de negócio"]
+  D --> E{"Resultado aceitável?"}
+  E -->|"Sim"| F["Ampliar exposição gradualmente"]
+  F --> G["Concluir rollout<br/>e remover flag temporária"]
+  E -->|"Não"| H["Desativar exposição<br/>e investigar os efeitos já ocorridos"]
+  H --> I["Corrigir ou reconciliar dados"]
+  I --> A
