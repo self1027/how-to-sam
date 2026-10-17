@@ -1,0 +1,16 @@
+{
+  "startOnLoad": false,
+  "securityLevel": "strict",
+  "htmlLabels": false,
+  "theme": "default",
+  "fontFamily": "Arial",
+  "flowchart": {
+    "useMaxWidth": false,
+    "nodeSpacing": 40,
+    "rankSpacing": 60
+  },
+  "sequence": {
+    "useMaxWidth": false,
+    "wrap": true
+  }
+}

@@ -11,9 +11,12 @@ Arquivos disponíveis:
 - [Quadro completo em formato nativo tldraw](guia-de-estudo.tldr): cópia exportada pelo próprio tldraw, com as 13 páginas e os 24 diagramas.
 - [Índice das versões SVG](svg/README.md): renderizações individuais das fontes Mermaid.
 - [Conteúdo estruturado](guia-de-estudo.json): títulos, fontes Mermaid, notas, perguntas e referências.
-- [Registro da conferência do quadro](validacao-tldraw.json) e [validação de sintaxe dos 24 diagramas](svg/validacao.json).
+- [Registro da conferência do quadro](validacao-tldraw.json) e [validação dos 24 SVGs](svg/validacao.json), incluindo sintaxe Mermaid, XML e abertura como imagem no navegador.
+- [Configuração de exportação Mermaid](mermaid.config.json) e [verificador de SVGs](validar-svg.ps1).
 
 Os arquivos Mermaid da tabela abaixo preservam as fontes editáveis dos diagramas. A organização visual, as cores e as notas adicionais do quadro ficam preservadas no arquivo nativo `.tldr`.
+
+Para novas exportações, use `mermaid.config.json`: `htmlLabels: false` deve estar na raiz da configuração para gerar rótulos SVG sem HTML embutido, conforme a [configuração oficial do Mermaid](https://mermaid.js.org/config/schema-docs/config-properties-htmllabels.html). Depois execute `powershell -NoProfile -File diagramas/validar-svg.ps1` na raiz do repositório. O verificador rejeita XML malformado e elementos HTML, que prejudicam a exibição dos SVGs como imagens.
 
 | Página | Conteúdo | Diagramas |
 | --- | --- | --- |

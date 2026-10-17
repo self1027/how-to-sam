@@ -1,98 +1,218 @@
 [
   {
     "id": "00-mapa",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 410,
+    "height": 1037
   },
   {
     "id": "01-runtime",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 433,
+    "height": 1155
   },
   {
     "id": "01-memoria",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 388,
+    "height": 1001
   },
   {
     "id": "02-v8",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 360,
+    "height": 1332
   },
   {
     "id": "02-decisao",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 360,
+    "height": 1064
   },
   {
     "id": "03-await",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 650,
+    "height": 791
   },
   {
     "id": "03-metricas",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 552,
+    "height": 983
   },
   {
     "id": "04-camadas",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 552,
+    "height": 883
   },
   {
     "id": "04-di",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 585,
+    "height": 482
   },
   {
     "id": "05-ciclo",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 355,
+    "height": 1501
   },
   {
     "id": "06-contrato",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 489,
+    "height": 1333
   },
   {
     "id": "06-release",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 408,
+    "height": 1064
   },
   {
     "id": "07-infra",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 721,
+    "height": 1885
   },
   {
     "id": "08-outbox",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 850,
+    "height": 640
   },
   {
     "id": "08-worker",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 688,
+    "height": 1491
   },
   {
     "id": "08-fanout",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 552,
+    "height": 325
   },
   {
     "id": "09-banco",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 571,
+    "height": 1170
   },
   {
     "id": "09-lote",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 360,
+    "height": 1179
   },
   {
     "id": "09-ttl",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 368,
+    "height": 936
   },
   {
     "id": "10-cache",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 362,
+    "height": 1110
   },
   {
     "id": "10-arquivo",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 360,
+    "height": 1216
   },
   {
     "id": "11-webhook",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 552,
+    "height": 1875
   },
   {
     "id": "11-dashboard",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 587,
+    "height": 1324
   },
   {
     "id": "12-conceitos",
-    "status": "ok"
+    "status": "ok",
+    "xml": "valid",
+    "htmlEmbedded": false,
+    "imageDecoded": true,
+    "width": 936,
+    "height": 604
   }
 ]
