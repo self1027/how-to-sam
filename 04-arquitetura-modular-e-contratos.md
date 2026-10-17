@@ -63,7 +63,7 @@ DTO é um formato de transferência de dados; Zod é uma ferramenta de validaç�
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/04-camadas.svg">Ampliar SVG</a> · <a href="diagramas/04-camadas.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/04-camadas.svg">Ampliar SVG</a> · <a href="diagramas/04-camadas.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 3. DI e DIP são conceitos diferentes
@@ -117,7 +117,7 @@ O contrato pode ser declarado com `interface` ou `type`. Não é necessário esc
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/04-di.svg">Ampliar SVG</a> · <a href="diagramas/04-di.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/04-di.svg">Ampliar SVG</a> · <a href="diagramas/04-di.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 4. Tipos não existem em runtime, mas têm valor

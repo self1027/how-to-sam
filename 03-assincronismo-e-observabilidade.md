@@ -39,7 +39,7 @@ Se você colocar um cálculo pesado antes do primeiro `await`, ele continuará r
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/03-await.svg">Ampliar SVG</a> · <a href="diagramas/03-await.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/03-await.svg">Ampliar SVG</a> · <a href="diagramas/03-await.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 2. Três maneiras de posicionar trabalho em um fluxo
@@ -194,7 +194,7 @@ Defina severidade, responsável e ação. Um alerta que apenas diz “algo deu e
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/03-metricas.svg">Ampliar SVG</a> · <a href="diagramas/03-metricas.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/03-metricas.svg">Ampliar SVG</a> · <a href="diagramas/03-metricas.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## Revisão ativa

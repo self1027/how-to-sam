@@ -144,7 +144,7 @@ A integração com sistemas de tarefas, repositórios e canais de comunicação 
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/05-ciclo.svg">Ampliar SVG</a> · <a href="diagramas/05-ciclo.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/05-ciclo.svg">Ampliar SVG</a> · <a href="diagramas/05-ciclo.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. Contexto e custo

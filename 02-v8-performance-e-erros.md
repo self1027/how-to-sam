@@ -40,7 +40,7 @@ Essa é uma apresentação dos componentes apresentados neste capítulo, não um
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/02-v8.svg">Ampliar SVG</a> · <a href="diagramas/02-v8.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/02-v8.svg">Ampliar SVG</a> · <a href="diagramas/02-v8.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 2. Código quente e hipóteses de otimização
@@ -172,7 +172,7 @@ Testes de carga e observabilidade se complementam. Essa combinação é mais con
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/02-decisao.svg">Ampliar SVG</a> · <a href="diagramas/02-decisao.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/02-decisao.svg">Ampliar SVG</a> · <a href="diagramas/02-decisao.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## Revisão ativa

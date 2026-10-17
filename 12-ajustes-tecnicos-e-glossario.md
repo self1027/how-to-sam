@@ -19,7 +19,7 @@ Use as interpretações e referências para avaliar essas afirmações antes de 
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/12-conceitos.svg">Ampliar SVG</a> · <a href="diagramas/12-conceitos.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/12-conceitos.svg">Ampliar SVG</a> · <a href="diagramas/12-conceitos.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 2. Runtime e desempenho

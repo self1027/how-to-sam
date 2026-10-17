@@ -82,7 +82,7 @@ Para testar terceiros, use um substituto controlado ou a homologação do parcei
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/06-contrato.svg">Ampliar SVG</a> · <a href="diagramas/06-contrato.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/06-contrato.svg">Ampliar SVG</a> · <a href="diagramas/06-contrato.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 4. Feature flags separam deploy de exposição
@@ -125,7 +125,7 @@ Uma flag não garante rollback de dados. Migrações destrutivas e efeitos já e
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/06-release.svg">Ampliar SVG</a> · <a href="diagramas/06-release.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/06-release.svg">Ampliar SVG</a> · <a href="diagramas/06-release.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 5. Fallback exige equivalência de negócio

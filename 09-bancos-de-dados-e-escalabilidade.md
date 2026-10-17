@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/09-banco.svg">Ampliar SVG</a> · <a href="diagramas/09-banco.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/09-banco.svg">Ampliar SVG</a> · <a href="diagramas/09-banco.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 1. O banco costuma limitar a escala do restante
@@ -101,7 +101,7 @@ Um agrupador de produção deve descarregar o lote ao atingir **um tamanho ou um
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/09-lote.svg">Ampliar SVG</a> · <a href="diagramas/09-lote.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/09-lote.svg">Ampliar SVG</a> · <a href="diagramas/09-lote.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 5. MongoDB e modelagem de documentos
@@ -156,7 +156,7 @@ Para um bloqueio de 30 minutos, a aplicação precisa interpretar o timestamp. O
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/09-ttl.svg">Ampliar SVG</a> · <a href="diagramas/09-ttl.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/09-ttl.svg">Ampliar SVG</a> · <a href="diagramas/09-ttl.mmd">Fonte (Mermaid)</a>
 </p>
 
 ### Idempotência exige operação atômica

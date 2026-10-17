@@ -100,7 +100,7 @@ Adie essa complexidade quando a equipe não consegue operá-la. Compare o benef�
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/07-infra.svg">Ampliar SVG</a> · <a href="diagramas/07-infra.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/07-infra.svg">Ampliar SVG</a> · <a href="diagramas/07-infra.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. Perguntas antes de escolher

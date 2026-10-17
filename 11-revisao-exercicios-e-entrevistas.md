@@ -96,7 +96,7 @@ Para terceiros, trate resultados incertos: timeout não prova que a operação r
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/11-webhook.svg">Ampliar SVG</a> · <a href="diagramas/11-webhook.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/11-webhook.svg">Ampliar SVG</a> · <a href="diagramas/11-webhook.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 6. Estudo de caso: dashboard cada vez mais lento
@@ -120,7 +120,7 @@ Se a leitura analítica disputa recursos com a operação, considere réplicas o
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/11-dashboard.svg">Ampliar SVG</a> · <a href="diagramas/11-dashboard.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/11-dashboard.svg">Ampliar SVG</a> · <a href="diagramas/11-dashboard.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. Estudo de caso: fluxo com IA

@@ -40,7 +40,7 @@ O pool da libuv tem tamanho padrão de **quatro threads**, configurável na inic
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/01-runtime.svg">Ampliar SVG</a> · <a href="diagramas/01-runtime.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/01-runtime.svg">Ampliar SVG</a> · <a href="diagramas/01-runtime.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 3. Call stack: uma pilha de chamadas
@@ -171,7 +171,7 @@ Referências circulares, sozinhas, não provam vazamento: coletores modernos con
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/01-memoria.svg">Ampliar SVG</a> · <a href="diagramas/01-memoria.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/01-memoria.svg">Ampliar SVG</a> · <a href="diagramas/01-memoria.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. O que observar na prática

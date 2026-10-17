@@ -73,7 +73,7 @@ Quando a origem muda, você pode invalidar a entrada ou aceitar a defasagem até
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/10-cache.svg">Ampliar SVG</a> · <a href="diagramas/10-cache.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/10-cache.svg">Ampliar SVG</a> · <a href="diagramas/10-cache.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 3. Complemento didático: cache stampede
@@ -136,7 +136,7 @@ Arquivar por idade costuma ter significado de negócio mais claro que simplesmen
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/10-arquivo.svg">Ampliar SVG</a> · <a href="diagramas/10-arquivo.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/10-arquivo.svg">Ampliar SVG</a> · <a href="diagramas/10-arquivo.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. Streams e backpressure

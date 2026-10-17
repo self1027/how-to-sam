@@ -37,7 +37,7 @@ Nem todo mecanismo chamado pub/sub é persistente. A durabilidade depende da tec
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/08-fanout.svg">Ampliar SVG</a> · <a href="diagramas/08-fanout.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/08-fanout.svg">Ampliar SVG</a> · <a href="diagramas/08-fanout.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 3. BullMQ: jobs armazenados em Redis
@@ -149,7 +149,7 @@ Os parâmetros são fornecidos pelo cliente SQL. Uma repetição não reaplica o
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/08-worker.svg">Ampliar SVG</a> · <a href="diagramas/08-worker.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/08-worker.svg">Ampliar SVG</a> · <a href="diagramas/08-worker.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 6. Outbox resolve a escrita dupla
@@ -195,7 +195,7 @@ Se o publicador cair depois de publicar e antes de marcar o registro, ele pode p
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/08-outbox.svg">Ampliar SVG</a> · <a href="diagramas/08-outbox.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/08-outbox.svg">Ampliar SVG</a> · <a href="diagramas/08-outbox.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## 7. Blast radius e sinais de operação

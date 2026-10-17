@@ -27,7 +27,7 @@ As recomendações de arquitetura e infraestrutura dependem do contexto. Não s�
 
 ## Diagramas de apoio
 
-O [quadro de estudo no tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s) reúne 24 diagramas editáveis em 13 páginas, com uma visão geral e os 12 capítulos. As [fontes Mermaid, versões SVG e cópia nativa do quadro](diagramas/README.md) estão disponíveis no projeto.
+O [quadro de estudo no tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s) reúne 24 diagramas em 13 páginas, com uma visão geral e os 12 capítulos. O acesso por link permite somente visualização. As [fontes Mermaid, versões SVG e cópia nativa do quadro](diagramas/README.md) estão disponíveis no projeto.
 
 <p align="center">
   <strong>Diagrama — Mapa do percurso de estudo</strong>
@@ -40,7 +40,7 @@ O [quadro de estudo no tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s) r
 </p>
 
 <p align="center">
-  <a href="diagramas/svg/00-mapa.svg">Ampliar SVG</a> · <a href="diagramas/00-mapa.mmd">Fonte editável (Mermaid)</a>
+  <a href="diagramas/svg/00-mapa.svg">Ampliar SVG</a> · <a href="diagramas/00-mapa.mmd">Fonte (Mermaid)</a>
 </p>
 
 ## Como usar os exemplos
