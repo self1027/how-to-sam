@@ -62,11 +62,19 @@ Uma chave de dashboard pode precisar incluir empresa, período, filtros e versã
 
 Quando a origem muda, você pode invalidar a entrada ou aceitar a defasagem até o TTL. A política precisa combinar com a regra de negócio. Expirar uma resposta em cache é diferente de remover automaticamente um registro durável por TTL no DynamoDB.
 
-**Diagrama — Cache-aside e proteção da origem**
+<p align="center">
+  <strong>Diagrama — Cache-aside e proteção da origem</strong>
+</p>
 
-![Cache-aside e proteção da origem](diagramas/svg/10-cache.svg)
+<p align="center">
+  <a href="diagramas/svg/10-cache.svg">
+    <img src="diagramas/svg/10-cache.svg" alt="Cache-aside e proteção da origem" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/10-cache.svg) · [Fonte editável (Mermaid)](diagramas/10-cache.mmd)
+<p align="center">
+  <a href="diagramas/svg/10-cache.svg">Ampliar SVG</a> · <a href="diagramas/10-cache.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 3. Complemento didático: cache stampede
 
@@ -117,11 +125,19 @@ Uma aplicação também precisa localizar o histórico. Tentar o banco e, se nad
 
 Arquivar por idade costuma ter significado de negócio mais claro que simplesmente apagar tudo que excede um número de linhas. Nenhuma quantidade fixa de registros define quando um banco ficará lento: índices, tamanho dos dados e consultas importam.
 
-**Diagrama — Arquivar com recuperação verificável**
+<p align="center">
+  <strong>Diagrama — Arquivar com recuperação verificável</strong>
+</p>
 
-![Arquivar com recuperação verificável](diagramas/svg/10-arquivo.svg)
+<p align="center">
+  <a href="diagramas/svg/10-arquivo.svg">
+    <img src="diagramas/svg/10-arquivo.svg" alt="Arquivar com recuperação verificável" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/10-arquivo.svg) · [Fonte editável (Mermaid)](diagramas/10-arquivo.mmd)
+<p align="center">
+  <a href="diagramas/svg/10-arquivo.svg">Ampliar SVG</a> · <a href="diagramas/10-arquivo.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 7. Streams e backpressure
 

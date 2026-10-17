@@ -85,13 +85,23 @@ Kubernetes é uma plataforma para orquestrar containers; EKS é uma oferta geren
 
 Adie essa complexidade quando a equipe não consegue operá-la. Compare o benefício com o custo operacional total. Não existe uma obrigação universal de ter um cargo específico de SRE, nem garantia de economia depois da migração.
 
-**Diagrama — Da necessidade ao modelo de execução**
+<p align="center">
+  <strong>Diagrama — Da necessidade ao modelo de execução</strong>
+</p>
 
-![Da necessidade ao modelo de execução](diagramas/svg/07-infra.svg)
+<p align="center">
+  <a href="diagramas/svg/07-infra.svg">
+    <img src="diagramas/svg/07-infra.svg" alt="Da necessidade ao modelo de execução" />
+  </a>
+</p>
 
-*Árvore de avaliação didática: as opções podem se combinar e dependem da carga e da equipe.*
+<p align="center">
+  <em>Árvore de avaliação didática: as opções podem se combinar e dependem da carga e da equipe.</em>
+</p>
 
-[Ampliar SVG](diagramas/svg/07-infra.svg) · [Fonte editável (Mermaid)](diagramas/07-infra.mmd)
+<p align="center">
+  <a href="diagramas/svg/07-infra.svg">Ampliar SVG</a> · <a href="diagramas/07-infra.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 7. Perguntas antes de escolher
 

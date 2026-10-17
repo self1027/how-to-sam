@@ -28,11 +28,19 @@ A continuação de `carregar()` espera o timer. Nesse intervalo, a thread pode e
 
 Se você colocar um cálculo pesado antes do primeiro `await`, ele continuará rodando na thread atual. Envolver uma função em `Promise.resolve()` também não a transfere para outra thread. A distinção entre execução JavaScript e trabalho nativo está no guia [Don't Block the Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
-**Diagrama — O que acontece durante um await?**
+<p align="center">
+  <strong>Diagrama — O que acontece durante um await?</strong>
+</p>
 
-![O que acontece durante um await?](diagramas/svg/03-await.svg)
+<p align="center">
+  <a href="diagramas/svg/03-await.svg">
+    <img src="diagramas/svg/03-await.svg" alt="O que acontece durante um await?" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/03-await.svg) · [Fonte editável (Mermaid)](diagramas/03-await.mmd)
+<p align="center">
+  <a href="diagramas/svg/03-await.svg">Ampliar SVG</a> · <a href="diagramas/03-await.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 2. Três maneiras de posicionar trabalho em um fluxo
 
@@ -175,11 +183,19 @@ Uma boa tela de acompanhamento conecta sintoma e resposta:
 
 Defina severidade, responsável e ação. Um alerta que apenas diz “algo deu errado” tende a gerar ruído. Para itens enfileirados, meça separadamente tempo de espera, processamento e tempo total até conclusão; uma API rápida pode esconder uma fila muito atrasada.
 
-**Diagrama — Da métrica à decisão de engenharia**
+<p align="center">
+  <strong>Diagrama — Da métrica à decisão de engenharia</strong>
+</p>
 
-![Da métrica à decisão de engenharia](diagramas/svg/03-metricas.svg)
+<p align="center">
+  <a href="diagramas/svg/03-metricas.svg">
+    <img src="diagramas/svg/03-metricas.svg" alt="Da métrica à decisão de engenharia" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/03-metricas.svg) · [Fonte editável (Mermaid)](diagramas/03-metricas.mmd)
+<p align="center">
+  <a href="diagramas/svg/03-metricas.svg">Ampliar SVG</a> · <a href="diagramas/03-metricas.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## Revisão ativa
 

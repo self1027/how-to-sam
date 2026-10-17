@@ -25,13 +25,23 @@ AST significa *abstract syntax tree*: uma estrutura que representa a sintaxe. By
 
 Essa é uma apresentação dos componentes apresentados neste capítulo, não uma promessa de que toda função atravesse todos eles em sequência. Versão do V8, plataforma e configuração influenciam os caminhos disponíveis. A documentação de [Ignition](https://v8.dev/docs/ignition) e o artigo de [Maglev](https://v8.dev/blog/maglev) explicam esses papéis e seus compromissos de custo de compilação.
 
-**Diagrama — Modelo conceitual de execução e otimização**
+<p align="center">
+  <strong>Diagrama — Modelo conceitual de execução e otimização</strong>
+</p>
 
-![Modelo conceitual de execução e otimização](diagramas/svg/02-v8.svg)
+<p align="center">
+  <a href="diagramas/svg/02-v8.svg">
+    <img src="diagramas/svg/02-v8.svg" alt="Modelo conceitual de execução e otimização" />
+  </a>
+</p>
 
-*Nem toda função passa por todos os compiladores; versão e plataforma alteram os caminhos.*
+<p align="center">
+  <em>Nem toda função passa por todos os compiladores; versão e plataforma alteram os caminhos.</em>
+</p>
 
-[Ampliar SVG](diagramas/svg/02-v8.svg) · [Fonte editável (Mermaid)](diagramas/02-v8.mmd)
+<p align="center">
+  <a href="diagramas/svg/02-v8.svg">Ampliar SVG</a> · <a href="diagramas/02-v8.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 2. Código quente e hipóteses de otimização
 
@@ -151,11 +161,19 @@ Isso preserva a possibilidade de selecionar comportamento sem interpretar códig
 
 Testes de carga e observabilidade se complementam. Essa combinação é mais confiável que concluir, a partir de um snippet isolado, que uma linguagem ou ferramenta é sempre superior.
 
-**Diagrama — Investigar antes de otimizar**
+<p align="center">
+  <strong>Diagrama — Investigar antes de otimizar</strong>
+</p>
 
-![Investigar antes de otimizar](diagramas/svg/02-decisao.svg)
+<p align="center">
+  <a href="diagramas/svg/02-decisao.svg">
+    <img src="diagramas/svg/02-decisao.svg" alt="Investigar antes de otimizar" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/02-decisao.svg) · [Fonte editável (Mermaid)](diagramas/02-decisao.mmd)
+<p align="center">
+  <a href="diagramas/svg/02-decisao.svg">Ampliar SVG</a> · <a href="diagramas/02-decisao.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## Revisão ativa
 

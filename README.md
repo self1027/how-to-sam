@@ -29,11 +29,19 @@ As recomendações de arquitetura e infraestrutura dependem do contexto. Não s�
 
 O [quadro de estudo no tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s) reúne 24 diagramas editáveis em 13 páginas, com uma visão geral e os 12 capítulos. As [fontes Mermaid, versões SVG e cópia nativa do quadro](diagramas/README.md) estão disponíveis no projeto.
 
-**Diagrama — Mapa do percurso de estudo**
+<p align="center">
+  <strong>Diagrama — Mapa do percurso de estudo</strong>
+</p>
 
-![Mapa do percurso de estudo](diagramas/svg/00-mapa.svg)
+<p align="center">
+  <a href="diagramas/svg/00-mapa.svg">
+    <img src="diagramas/svg/00-mapa.svg" alt="Mapa do percurso de estudo" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/00-mapa.svg) · [Fonte editável (Mermaid)](diagramas/00-mapa.mmd)
+<p align="center">
+  <a href="diagramas/svg/00-mapa.svg">Ampliar SVG</a> · <a href="diagramas/00-mapa.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## Como usar os exemplos
 

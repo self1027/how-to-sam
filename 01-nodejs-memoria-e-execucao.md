@@ -25,13 +25,23 @@ Isso não significa que o processo inteiro possua apenas uma thread. Há trabalh
 
 O pool da libuv tem tamanho padrão de **quatro threads**, configurável na inicialização com `UV_THREADPOOL_SIZE`. Esse número descreve o pool, não a quantidade total de threads do Node.js. Aumentá-lo não faz um `for` JavaScript ser executado em paralelo. Veja a [documentação da libuv](https://docs.libuv.org/en/v1.x/threadpool.html).
 
-**Diagrama — Quem executa cada tipo de trabalho?**
+<p align="center">
+  <strong>Diagrama — Quem executa cada tipo de trabalho?</strong>
+</p>
 
-![Quem executa cada tipo de trabalho?](diagramas/svg/01-runtime.svg)
+<p align="center">
+  <a href="diagramas/svg/01-runtime.svg">
+    <img src="diagramas/svg/01-runtime.svg" alt="Quem executa cada tipo de trabalho?" />
+  </a>
+</p>
 
-*Modelo conceitual: não representa a ordem completa das fases do event loop e das microtasks.*
+<p align="center">
+  <em>Modelo conceitual: não representa a ordem completa das fases do event loop e das microtasks.</em>
+</p>
 
-[Ampliar SVG](diagramas/svg/01-runtime.svg) · [Fonte editável (Mermaid)](diagramas/01-runtime.mmd)
+<p align="center">
+  <a href="diagramas/svg/01-runtime.svg">Ampliar SVG</a> · <a href="diagramas/01-runtime.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 3. Call stack: uma pilha de chamadas
 
@@ -150,11 +160,19 @@ Em um cache real, defina limite, política de expiração e descarte. O coletor 
 
 Referências circulares, sozinhas, não provam vazamento: coletores modernos conseguem recuperar ciclos inteiramente inalcançáveis. “Orinoco” está relacionado à evolução do coletor do V8; não significa que toda memória será devolvida imediatamente ao sistema operacional. O artigo [Trash talk: the Orinoco garbage collector](https://v8.dev/blog/trash-talk) explica alcançabilidade e coleta.
 
-**Diagrama — Por que o GC não libera tudo?**
+<p align="center">
+  <strong>Diagrama — Por que o GC não libera tudo?</strong>
+</p>
 
-![Por que o GC não libera tudo?](diagramas/svg/01-memoria.svg)
+<p align="center">
+  <a href="diagramas/svg/01-memoria.svg">
+    <img src="diagramas/svg/01-memoria.svg" alt="Por que o GC não libera tudo?" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/01-memoria.svg) · [Fonte editável (Mermaid)](diagramas/01-memoria.mmd)
+<p align="center">
+  <a href="diagramas/svg/01-memoria.svg">Ampliar SVG</a> · <a href="diagramas/01-memoria.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 7. O que observar na prática
 

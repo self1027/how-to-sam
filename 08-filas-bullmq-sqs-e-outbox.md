@@ -26,11 +26,19 @@ Para que cada serviço receba sua própria cópia, um desenho possível é um t�
 
 Nem todo mecanismo chamado pub/sub é persistente. A durabilidade depende da tecnologia e de sua configuração.
 
-**Diagrama — Fila de trabalho e distribuição para assinantes**
+<p align="center">
+  <strong>Diagrama — Fila de trabalho e distribuição para assinantes</strong>
+</p>
 
-![Fila de trabalho e distribuição para assinantes](diagramas/svg/08-fanout.svg)
+<p align="center">
+  <a href="diagramas/svg/08-fanout.svg">
+    <img src="diagramas/svg/08-fanout.svg" alt="Fila de trabalho e distribuição para assinantes" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/08-fanout.svg) · [Fonte editável (Mermaid)](diagramas/08-fanout.mmd)
+<p align="center">
+  <a href="diagramas/svg/08-fanout.svg">Ampliar SVG</a> · <a href="diagramas/08-fanout.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 3. BullMQ: jobs armazenados em Redis
 
@@ -130,11 +138,19 @@ COMMIT;
 
 Os parâmetros são fornecidos pelo cliente SQL. Uma repetição não reaplica o crédito. Para uma API externa, essa transação não engloba o efeito remoto: é necessário um protocolo adicional e reconciliação de resultados incertos.
 
-**Diagrama — Repetir o trabalho sem duplicar o efeito**
+<p align="center">
+  <strong>Diagrama — Repetir o trabalho sem duplicar o efeito</strong>
+</p>
 
-![Repetir o trabalho sem duplicar o efeito](diagramas/svg/08-worker.svg)
+<p align="center">
+  <a href="diagramas/svg/08-worker.svg">
+    <img src="diagramas/svg/08-worker.svg" alt="Repetir o trabalho sem duplicar o efeito" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/08-worker.svg) · [Fonte editável (Mermaid)](diagramas/08-worker.mmd)
+<p align="center">
+  <a href="diagramas/svg/08-worker.svg">Ampliar SVG</a> · <a href="diagramas/08-worker.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 6. Outbox resolve a escrita dupla
 
@@ -168,11 +184,19 @@ COMMIT;
 
 Se o publicador cair depois de publicar e antes de marcar o registro, ele pode publicar de novo. Outbox, portanto, exige consumidores preparados para duplicatas e não garante “exatamente uma vez” de ponta a ponta. O publicador também precisa coordenar concorrência, tentativas, retenção e observabilidade. Veja o [padrão transactional outbox da AWS](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html).
 
-**Diagrama — Outbox: resolver a escrita dupla**
+<p align="center">
+  <strong>Diagrama — Outbox: resolver a escrita dupla</strong>
+</p>
 
-![Outbox: resolver a escrita dupla](diagramas/svg/08-outbox.svg)
+<p align="center">
+  <a href="diagramas/svg/08-outbox.svg">
+    <img src="diagramas/svg/08-outbox.svg" alt="Outbox: resolver a escrita dupla" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/08-outbox.svg) · [Fonte editável (Mermaid)](diagramas/08-outbox.mmd)
+<p align="center">
+  <a href="diagramas/svg/08-outbox.svg">Ampliar SVG</a> · <a href="diagramas/08-outbox.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 7. Blast radius e sinais de operação
 

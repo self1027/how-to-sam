@@ -2,11 +2,19 @@
 
 **Objetivo:** escolher o armazenamento pelos acessos e garantias exigidos, e reconhecer o gargalo antes de distribuir dados.
 
-**Diagrama — Escolher pelo padrão de acesso**
+<p align="center">
+  <strong>Diagrama — Escolher pelo padrão de acesso</strong>
+</p>
 
-![Escolher pelo padrão de acesso](diagramas/svg/09-banco.svg)
+<p align="center">
+  <a href="diagramas/svg/09-banco.svg">
+    <img src="diagramas/svg/09-banco.svg" alt="Escolher pelo padrão de acesso" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/09-banco.svg) · [Fonte editável (Mermaid)](diagramas/09-banco.mmd)
+<p align="center">
+  <a href="diagramas/svg/09-banco.svg">Ampliar SVG</a> · <a href="diagramas/09-banco.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 1. O banco costuma limitar a escala do restante
 
@@ -82,11 +90,19 @@ Um agrupador de produção deve descarregar o lote ao atingir **um tamanho ou um
 
 **Ajuste técnico:** cada insert não gera necessariamente um arquivo de binlog. O binary log contém eventos de alterações e transações, de acordo com o formato e a configuração. Lotes podem melhorar desempenho, mas o benefício não vem de uma regra “um registro = um binlog”. Veja o [manual do binary log do MySQL](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html).
 
-**Diagrama — Escrever em lote sem esperar indefinidamente**
+<p align="center">
+  <strong>Diagrama — Escrever em lote sem esperar indefinidamente</strong>
+</p>
 
-![Escrever em lote sem esperar indefinidamente](diagramas/svg/09-lote.svg)
+<p align="center">
+  <a href="diagramas/svg/09-lote.svg">
+    <img src="diagramas/svg/09-lote.svg" alt="Escrever em lote sem esperar indefinidamente" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/09-lote.svg) · [Fonte editável (Mermaid)](diagramas/09-lote.mmd)
+<p align="center">
+  <a href="diagramas/svg/09-lote.svg">Ampliar SVG</a> · <a href="diagramas/09-lote.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 5. MongoDB e modelagem de documentos
 
@@ -129,11 +145,19 @@ console.log(estaVigente(registro, agoraSegundos + 30 * 60)); // false
 
 Para um bloqueio de 30 minutos, a aplicação precisa interpretar o timestamp. O TTL cuida de limpeza posterior, sem funcionar como um cronômetro exato de autorização.
 
-**Diagrama — Expiração lógica e limpeza física**
+<p align="center">
+  <strong>Diagrama — Expiração lógica e limpeza física</strong>
+</p>
 
-![Expiração lógica e limpeza física](diagramas/svg/09-ttl.svg)
+<p align="center">
+  <a href="diagramas/svg/09-ttl.svg">
+    <img src="diagramas/svg/09-ttl.svg" alt="Expiração lógica e limpeza física" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/09-ttl.svg) · [Fonte editável (Mermaid)](diagramas/09-ttl.mmd)
+<p align="center">
+  <a href="diagramas/svg/09-ttl.svg">Ampliar SVG</a> · <a href="diagramas/09-ttl.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ### Idempotência exige operação atômica
 

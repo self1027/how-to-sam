@@ -43,8 +43,13 @@ foreach ($page in $guide.pages) {
             throw "viewBox ausente: $fileName"
         }
 
+        $background = $root.SelectSingleNode("*[local-name()='rect' and @data-diagram-background='true']")
+        if (-not $background) {
+            throw "Fundo ausente: $fileName; execute diagramas/preparar-svg.ps1 antes da validacao."
+        }
+
         $validatedCount++
     }
 }
 
-Write-Output "$validatedCount SVGs validados: XML valido, namespace SVG e sem HTML embutido."
+Write-Output "$validatedCount SVGs validados: XML valido, fundo presente e sem HTML embutido."

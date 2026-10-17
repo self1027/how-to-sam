@@ -133,11 +133,19 @@ Cada revisão deve produzir achados concretos, localização e consequência. Co
 
 A integração com sistemas de tarefas, repositórios e canais de comunicação via ferramentas/MCP permite automatizar partes do fluxo: ler, escrever e enviar mensagens dependem das permissões e do escopo autorizado em cada ambiente.
 
-**Diagrama — Do problema de produto ao aprendizado**
+<p align="center">
+  <strong>Diagrama — Do problema de produto ao aprendizado</strong>
+</p>
 
-![Do problema de produto ao aprendizado](diagramas/svg/05-ciclo.svg)
+<p align="center">
+  <a href="diagramas/svg/05-ciclo.svg">
+    <img src="diagramas/svg/05-ciclo.svg" alt="Do problema de produto ao aprendizado" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/05-ciclo.svg) · [Fonte editável (Mermaid)](diagramas/05-ciclo.mmd)
+<p align="center">
+  <a href="diagramas/svg/05-ciclo.svg">Ampliar SVG</a> · <a href="diagramas/05-ciclo.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 7. Contexto e custo
 

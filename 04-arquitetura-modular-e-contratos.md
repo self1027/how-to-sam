@@ -52,11 +52,19 @@ Um schema pode garantir que `valorCentavos` seja um inteiro positivo. Saber se o
 
 DTO é um formato de transferência de dados; Zod é uma ferramenta de validação. Um DTO pode ter um schema associado, mas os termos não são sinônimos.
 
-**Diagrama — Caminho de uma requisição**
+<p align="center">
+  <strong>Diagrama — Caminho de uma requisição</strong>
+</p>
 
-![Caminho de uma requisição](diagramas/svg/04-camadas.svg)
+<p align="center">
+  <a href="diagramas/svg/04-camadas.svg">
+    <img src="diagramas/svg/04-camadas.svg" alt="Caminho de uma requisição" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/04-camadas.svg) · [Fonte editável (Mermaid)](diagramas/04-camadas.mmd)
+<p align="center">
+  <a href="diagramas/svg/04-camadas.svg">Ampliar SVG</a> · <a href="diagramas/04-camadas.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 3. DI e DIP são conceitos diferentes
 
@@ -98,11 +106,19 @@ A função recebe a dependência: isso é DI. O contrato pedido pelo caso de uso
 
 O contrato pode ser declarado com `interface` ou `type`. Não é necessário escrever `implements` em toda classe: a compatibilidade estrutural permite que um valor satisfaça o formato esperado. Veja o [Handbook de interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html).
 
-**Diagrama — DI e DIP vistos separadamente**
+<p align="center">
+  <strong>Diagrama — DI e DIP vistos separadamente</strong>
+</p>
 
-![DI e DIP vistos separadamente](diagramas/svg/04-di.svg)
+<p align="center">
+  <a href="diagramas/svg/04-di.svg">
+    <img src="diagramas/svg/04-di.svg" alt="DI e DIP vistos separadamente" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/04-di.svg) · [Fonte editável (Mermaid)](diagramas/04-di.mmd)
+<p align="center">
+  <a href="diagramas/svg/04-di.svg">Ampliar SVG</a> · <a href="diagramas/04-di.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 4. Tipos não existem em runtime, mas têm valor
 

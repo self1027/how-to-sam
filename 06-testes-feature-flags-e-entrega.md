@@ -71,11 +71,19 @@ A checagem de status evita tratar uma página de erro como pagamento válido. O 
 
 Para testar terceiros, use um substituto controlado ou a homologação do parceiro. Ambiente de teste não deve disparar cobranças e webhooks no ambiente de produção. Respostas representativas e cenários de contrato ajudam sem tornar toda pipeline dependente da disponibilidade externa.
 
-**Diagrama — Validar uma integração externa**
+<p align="center">
+  <strong>Diagrama — Validar uma integração externa</strong>
+</p>
 
-![Validar uma integração externa](diagramas/svg/06-contrato.svg)
+<p align="center">
+  <a href="diagramas/svg/06-contrato.svg">
+    <img src="diagramas/svg/06-contrato.svg" alt="Validar uma integração externa" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/06-contrato.svg) · [Fonte editável (Mermaid)](diagramas/06-contrato.mmd)
+<p align="center">
+  <a href="diagramas/svg/06-contrato.svg">Ampliar SVG</a> · <a href="diagramas/06-contrato.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 4. Feature flags separam deploy de exposição
 
@@ -106,11 +114,19 @@ Em produção, defina como a configuração muda, quem pode alterá-la e o compo
 
 Uma flag não garante rollback de dados. Migrações destrutivas e efeitos já executados continuam existindo depois de desligar uma funcionalidade. Planeje compatibilidade entre versões e remoção posterior das flags temporárias.
 
-**Diagrama — Deploy não é exposição ao público**
+<p align="center">
+  <strong>Diagrama — Deploy não é exposição ao público</strong>
+</p>
 
-![Deploy não é exposição ao público](diagramas/svg/06-release.svg)
+<p align="center">
+  <a href="diagramas/svg/06-release.svg">
+    <img src="diagramas/svg/06-release.svg" alt="Deploy não é exposição ao público" />
+  </a>
+</p>
 
-[Ampliar SVG](diagramas/svg/06-release.svg) · [Fonte editável (Mermaid)](diagramas/06-release.mmd)
+<p align="center">
+  <a href="diagramas/svg/06-release.svg">Ampliar SVG</a> · <a href="diagramas/06-release.mmd">Fonte editável (Mermaid)</a>
+</p>
 
 ## 5. Fallback exige equivalência de negócio
 

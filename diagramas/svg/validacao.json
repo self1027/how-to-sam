@@ -5,8 +5,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 410,
-    "height": 1037
+    "background": "#f6f8fc",
+    "width": 474,
+    "height": 1101
   },
   {
     "id": "01-runtime",
@@ -14,8 +15,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 433,
-    "height": 1155
+    "background": "#f6f8fc",
+    "width": 497,
+    "height": 1219
   },
   {
     "id": "01-memoria",
@@ -23,8 +25,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 388,
-    "height": 1001
+    "background": "#f6f8fc",
+    "width": 452,
+    "height": 1065
   },
   {
     "id": "02-v8",
@@ -32,8 +35,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 360,
-    "height": 1332
+    "background": "#f6f8fc",
+    "width": 424,
+    "height": 1396
   },
   {
     "id": "02-decisao",
@@ -41,8 +45,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 360,
-    "height": 1064
+    "background": "#f6f8fc",
+    "width": 424,
+    "height": 1128
   },
   {
     "id": "03-await",
@@ -50,8 +55,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 650,
-    "height": 791
+    "background": "#f6f8fc",
+    "width": 714,
+    "height": 885
   },
   {
     "id": "03-metricas",
@@ -59,8 +65,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 552,
-    "height": 983
+    "background": "#f6f8fc",
+    "width": 616,
+    "height": 1047
   },
   {
     "id": "04-camadas",
@@ -68,8 +75,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 552,
-    "height": 883
+    "background": "#f6f8fc",
+    "width": 616,
+    "height": 947
   },
   {
     "id": "04-di",
@@ -77,8 +85,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 585,
-    "height": 482
+    "background": "#f6f8fc",
+    "width": 649,
+    "height": 546
   },
   {
     "id": "05-ciclo",
@@ -86,8 +95,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 355,
-    "height": 1501
+    "background": "#f6f8fc",
+    "width": 419,
+    "height": 1565
   },
   {
     "id": "06-contrato",
@@ -95,8 +105,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 489,
-    "height": 1333
+    "background": "#f6f8fc",
+    "width": 553,
+    "height": 1397
   },
   {
     "id": "06-release",
@@ -104,8 +115,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 408,
-    "height": 1064
+    "background": "#f6f8fc",
+    "width": 472,
+    "height": 1128
   },
   {
     "id": "07-infra",
@@ -113,8 +125,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 721,
-    "height": 1885
+    "background": "#f6f8fc",
+    "width": 785,
+    "height": 1949
   },
   {
     "id": "08-outbox",
@@ -122,8 +135,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 850,
-    "height": 640
+    "background": "#f6f8fc",
+    "width": 914,
+    "height": 734
   },
   {
     "id": "08-worker",
@@ -131,8 +145,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 688,
-    "height": 1491
+    "background": "#f6f8fc",
+    "width": 752,
+    "height": 1555
   },
   {
     "id": "08-fanout",
@@ -140,8 +155,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 552,
-    "height": 325
+    "background": "#f6f8fc",
+    "width": 616,
+    "height": 389
   },
   {
     "id": "09-banco",
@@ -149,8 +165,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 571,
-    "height": 1170
+    "background": "#f6f8fc",
+    "width": 635,
+    "height": 1234
   },
   {
     "id": "09-lote",
@@ -158,8 +175,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 360,
-    "height": 1179
+    "background": "#f6f8fc",
+    "width": 424,
+    "height": 1243
   },
   {
     "id": "09-ttl",
@@ -167,8 +185,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 368,
-    "height": 936
+    "background": "#f6f8fc",
+    "width": 432,
+    "height": 1000
   },
   {
     "id": "10-cache",
@@ -176,8 +195,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 362,
-    "height": 1110
+    "background": "#f6f8fc",
+    "width": 426,
+    "height": 1174
   },
   {
     "id": "10-arquivo",
@@ -185,8 +205,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 360,
-    "height": 1216
+    "background": "#f6f8fc",
+    "width": 424,
+    "height": 1280
   },
   {
     "id": "11-webhook",
@@ -194,8 +215,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 552,
-    "height": 1875
+    "background": "#f6f8fc",
+    "width": 616,
+    "height": 1939
   },
   {
     "id": "11-dashboard",
@@ -203,8 +225,9 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 587,
-    "height": 1324
+    "background": "#f6f8fc",
+    "width": 651,
+    "height": 1388
   },
   {
     "id": "12-conceitos",
@@ -212,7 +235,8 @@
     "xml": "valid",
     "htmlEmbedded": false,
     "imageDecoded": true,
-    "width": 936,
-    "height": 604
+    "background": "#f6f8fc",
+    "width": 1000,
+    "height": 668
   }
 ]

@@ -2,7 +2,7 @@
 
 Os 24 diagramas complementam os 12 capítulos do guia e estão organizados em 13 páginas no [quadro tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s).
 
-Os diagramas também aparecem diretamente no [README do guia](../README.md) e nas seções correspondentes dos 12 capítulos, como imagens SVG com texto alternativo, opção de ampliar e link para a fonte Mermaid.
+Os diagramas também aparecem diretamente no [README do guia](../README.md) e nas seções correspondentes dos 12 capítulos. Títulos, imagens, legendas e links ficam centralizados. Os SVGs têm fundo claro, borda discreta e margem interna, com texto alternativo, opção de ampliar e link para a fonte Mermaid.
 
 Use o menu de páginas do quadro para escolher um capítulo. As formas e conexões são editáveis. Cada página reúne objetivo, fluxos, pontos para lembrar e uma pergunta de revisão.
 
@@ -12,11 +12,16 @@ Arquivos disponíveis:
 - [Índice das versões SVG](svg/README.md): renderizações individuais das fontes Mermaid.
 - [Conteúdo estruturado](guia-de-estudo.json): títulos, fontes Mermaid, notas, perguntas e referências.
 - [Registro da conferência do quadro](validacao-tldraw.json) e [validação dos 24 SVGs](svg/validacao.json), incluindo sintaxe Mermaid, XML e abertura como imagem no navegador.
-- [Configuração de exportação Mermaid](mermaid.config.json) e [verificador de SVGs](validar-svg.ps1).
+- [Configuração de exportação Mermaid](mermaid.config.json), [preparação do fundo dos SVGs](preparar-svg.ps1) e [verificador de SVGs](validar-svg.ps1).
 
 Os arquivos Mermaid da tabela abaixo preservam as fontes editáveis dos diagramas. A organização visual, as cores e as notas adicionais do quadro ficam preservadas no arquivo nativo `.tldr`.
 
-Para novas exportações, use `mermaid.config.json`: `htmlLabels: false` deve estar na raiz da configuração para gerar rótulos SVG sem HTML embutido, conforme a [configuração oficial do Mermaid](https://mermaid.js.org/config/schema-docs/config-properties-htmllabels.html). Depois execute `powershell -NoProfile -File diagramas/validar-svg.ps1` na raiz do repositório. O verificador rejeita XML malformado e elementos HTML, que prejudicam a exibição dos SVGs como imagens.
+Para novas exportações, use `mermaid.config.json`: `htmlLabels: false` deve estar na raiz da configuração para gerar rótulos SVG sem HTML embutido, conforme a [configuração oficial do Mermaid](https://mermaid.js.org/config/schema-docs/config-properties-htmllabels.html). Depois execute os comandos abaixo na raiz do repositório. A preparação adiciona o fundo e pode ser repetida sem acumular margens. O verificador rejeita XML malformado, HTML embutido e ausência do fundo.
+
+```powershell
+powershell -NoProfile -File diagramas/preparar-svg.ps1
+powershell -NoProfile -File diagramas/validar-svg.ps1
+```
 
 | Página | Conteúdo | Diagramas |
 | --- | --- | --- |
