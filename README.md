@@ -25,6 +25,16 @@ As recomendações de arquitetura e infraestrutura dependem do contexto. Não s�
 | 11 | [Revisão, exercícios e entrevistas](11-revisao-exercicios-e-entrevistas.md) | Praticar decisões e conectar os capítulos |
 | 12 | [Ajustes técnicos e glossário](12-ajustes-tecnicos-e-glossario.md) | Evitar generalizações e revisar o vocabulário |
 
+## Diagramas de apoio
+
+O [quadro de estudo no tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s) reúne 24 diagramas editáveis em 13 páginas, com uma visão geral e os 12 capítulos. As [fontes Mermaid, versões SVG e cópia nativa do quadro](diagramas/README.md) estão disponíveis no projeto.
+
+**Diagrama — Mapa do percurso de estudo**
+
+![Mapa do percurso de estudo](diagramas/svg/00-mapa.svg)
+
+[Ampliar SVG](diagramas/svg/00-mapa.svg) · [Fonte editável (Mermaid)](diagramas/00-mapa.mmd)
+
 ## Como usar os exemplos
 
 Os exemplos JavaScript completos usam módulos ES: salve o bloco em um arquivo `.mjs` e execute com `node exemplo.mjs`. Os exemplos foram preparados para Node.js 24. Trechos TypeScript usam `.ts`; a execução sem tipos não substitui a checagem com o compilador TypeScript.

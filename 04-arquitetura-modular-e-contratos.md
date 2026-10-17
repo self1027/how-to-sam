@@ -52,6 +52,12 @@ Um schema pode garantir que `valorCentavos` seja um inteiro positivo. Saber se o
 
 DTO é um formato de transferência de dados; Zod é uma ferramenta de validação. Um DTO pode ter um schema associado, mas os termos não são sinônimos.
 
+**Diagrama — Caminho de uma requisição**
+
+![Caminho de uma requisição](diagramas/svg/04-camadas.svg)
+
+[Ampliar SVG](diagramas/svg/04-camadas.svg) · [Fonte editável (Mermaid)](diagramas/04-camadas.mmd)
+
 ## 3. DI e DIP são conceitos diferentes
 
 **Injeção de dependência (DI)** significa fornecer uma dependência ao componente que a utiliza, em vez de ele sempre construí-la internamente. Isso pode ser feito com funções comuns, sem classes e sem biblioteca.
@@ -91,6 +97,12 @@ console.log(await buscarUsuario('u2'));
 A função recebe a dependência: isso é DI. O contrato pedido pelo caso de uso não exige detalhes de uma ORM específica: isso exemplifica a intenção do DIP. A função `criarBuscarUsuario` também funciona como uma fábrica de comportamento configurado.
 
 O contrato pode ser declarado com `interface` ou `type`. Não é necessário escrever `implements` em toda classe: a compatibilidade estrutural permite que um valor satisfaça o formato esperado. Veja o [Handbook de interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html).
+
+**Diagrama — DI e DIP vistos separadamente**
+
+![DI e DIP vistos separadamente](diagramas/svg/04-di.svg)
+
+[Ampliar SVG](diagramas/svg/04-di.svg) · [Fonte editável (Mermaid)](diagramas/04-di.mmd)
 
 ## 4. Tipos não existem em runtime, mas têm valor
 

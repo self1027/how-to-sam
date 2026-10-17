@@ -25,6 +25,14 @@ Isso não significa que o processo inteiro possua apenas uma thread. Há trabalh
 
 O pool da libuv tem tamanho padrão de **quatro threads**, configurável na inicialização com `UV_THREADPOOL_SIZE`. Esse número descreve o pool, não a quantidade total de threads do Node.js. Aumentá-lo não faz um `for` JavaScript ser executado em paralelo. Veja a [documentação da libuv](https://docs.libuv.org/en/v1.x/threadpool.html).
 
+**Diagrama — Quem executa cada tipo de trabalho?**
+
+![Quem executa cada tipo de trabalho?](diagramas/svg/01-runtime.svg)
+
+*Modelo conceitual: não representa a ordem completa das fases do event loop e das microtasks.*
+
+[Ampliar SVG](diagramas/svg/01-runtime.svg) · [Fonte editável (Mermaid)](diagramas/01-runtime.mmd)
+
 ## 3. Call stack: uma pilha de chamadas
 
 A *call stack* registra as chamadas síncronas em andamento. Ela segue LIFO: *last in, first out*, ou último a entrar, primeiro a sair.
@@ -141,6 +149,12 @@ console.log(cache.size); // 0
 Em um cache real, defina limite, política de expiração e descarte. O coletor não interpreta sua intenção de negócio: se o `Map` segue alcançável e contém a entrada, ela continua necessária para o programa do ponto de vista do runtime.
 
 Referências circulares, sozinhas, não provam vazamento: coletores modernos conseguem recuperar ciclos inteiramente inalcançáveis. “Orinoco” está relacionado à evolução do coletor do V8; não significa que toda memória será devolvida imediatamente ao sistema operacional. O artigo [Trash talk: the Orinoco garbage collector](https://v8.dev/blog/trash-talk) explica alcançabilidade e coleta.
+
+**Diagrama — Por que o GC não libera tudo?**
+
+![Por que o GC não libera tudo?](diagramas/svg/01-memoria.svg)
+
+[Ampliar SVG](diagramas/svg/01-memoria.svg) · [Fonte editável (Mermaid)](diagramas/01-memoria.mmd)
 
 ## 7. O que observar na prática
 

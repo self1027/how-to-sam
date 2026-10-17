@@ -28,6 +28,12 @@ A continuação de `carregar()` espera o timer. Nesse intervalo, a thread pode e
 
 Se você colocar um cálculo pesado antes do primeiro `await`, ele continuará rodando na thread atual. Envolver uma função em `Promise.resolve()` também não a transfere para outra thread. A distinção entre execução JavaScript e trabalho nativo está no guia [Don't Block the Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
+**Diagrama — O que acontece durante um await?**
+
+![O que acontece durante um await?](diagramas/svg/03-await.svg)
+
+[Ampliar SVG](diagramas/svg/03-await.svg) · [Fonte editável (Mermaid)](diagramas/03-await.mmd)
+
 ## 2. Três maneiras de posicionar trabalho em um fluxo
 
 | Forma | Efeito na resposta | Limitação principal |
@@ -168,6 +174,12 @@ Uma boa tela de acompanhamento conecta sintoma e resposta:
 | Erros após ativação de uma versão | Regressão possível | Comparar grupos, versão e flag |
 
 Defina severidade, responsável e ação. Um alerta que apenas diz “algo deu errado” tende a gerar ruído. Para itens enfileirados, meça separadamente tempo de espera, processamento e tempo total até conclusão; uma API rápida pode esconder uma fila muito atrasada.
+
+**Diagrama — Da métrica à decisão de engenharia**
+
+![Da métrica à decisão de engenharia](diagramas/svg/03-metricas.svg)
+
+[Ampliar SVG](diagramas/svg/03-metricas.svg) · [Fonte editável (Mermaid)](diagramas/03-metricas.mmd)
 
 ## Revisão ativa
 

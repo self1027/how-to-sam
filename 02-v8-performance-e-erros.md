@@ -25,6 +25,14 @@ AST significa *abstract syntax tree*: uma estrutura que representa a sintaxe. By
 
 Essa é uma apresentação dos componentes apresentados neste capítulo, não uma promessa de que toda função atravesse todos eles em sequência. Versão do V8, plataforma e configuração influenciam os caminhos disponíveis. A documentação de [Ignition](https://v8.dev/docs/ignition) e o artigo de [Maglev](https://v8.dev/blog/maglev) explicam esses papéis e seus compromissos de custo de compilação.
 
+**Diagrama — Modelo conceitual de execução e otimização**
+
+![Modelo conceitual de execução e otimização](diagramas/svg/02-v8.svg)
+
+*Nem toda função passa por todos os compiladores; versão e plataforma alteram os caminhos.*
+
+[Ampliar SVG](diagramas/svg/02-v8.svg) · [Fonte editável (Mermaid)](diagramas/02-v8.mmd)
+
 ## 2. Código quente e hipóteses de otimização
 
 Um motor JIT pode usar informações observadas durante a execução para especializar código. Se um acesso recebe repetidamente objetos com formato semelhante, há oportunidades de executar esse acesso de forma eficiente.
@@ -142,6 +150,12 @@ Isso preserva a possibilidade de selecionar comportamento sem interpretar códig
 6. Confira se o ganho permanece no fluxo completo.
 
 Testes de carga e observabilidade se complementam. Essa combinação é mais confiável que concluir, a partir de um snippet isolado, que uma linguagem ou ferramenta é sempre superior.
+
+**Diagrama — Investigar antes de otimizar**
+
+![Investigar antes de otimizar](diagramas/svg/02-decisao.svg)
+
+[Ampliar SVG](diagramas/svg/02-decisao.svg) · [Fonte editável (Mermaid)](diagramas/02-decisao.mmd)
 
 ## Revisão ativa
 

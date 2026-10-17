@@ -71,6 +71,12 @@ A checagem de status evita tratar uma página de erro como pagamento válido. O 
 
 Para testar terceiros, use um substituto controlado ou a homologação do parceiro. Ambiente de teste não deve disparar cobranças e webhooks no ambiente de produção. Respostas representativas e cenários de contrato ajudam sem tornar toda pipeline dependente da disponibilidade externa.
 
+**Diagrama — Validar uma integração externa**
+
+![Validar uma integração externa](diagramas/svg/06-contrato.svg)
+
+[Ampliar SVG](diagramas/svg/06-contrato.svg) · [Fonte editável (Mermaid)](diagramas/06-contrato.mmd)
+
 ## 4. Feature flags separam deploy de exposição
 
 Deploy coloca o código em um ambiente. Release disponibiliza um comportamento a um público. Uma feature flag permite implantar o código e ativar a funcionalidade apenas para um grupo.
@@ -99,6 +105,12 @@ console.log(escolherBusca('empresa-a', configuracao)); // v1
 Em produção, defina como a configuração muda, quem pode alterá-la e o comportamento se o serviço de flags falhar. Se o mesmo usuário alterna de grupo a cada requisição, a análise fica difícil; grupos estáveis facilitam a comparação.
 
 Uma flag não garante rollback de dados. Migrações destrutivas e efeitos já executados continuam existindo depois de desligar uma funcionalidade. Planeje compatibilidade entre versões e remoção posterior das flags temporárias.
+
+**Diagrama — Deploy não é exposição ao público**
+
+![Deploy não é exposição ao público](diagramas/svg/06-release.svg)
+
+[Ampliar SVG](diagramas/svg/06-release.svg) · [Fonte editável (Mermaid)](diagramas/06-release.mmd)
 
 ## 5. Fallback exige equivalência de negócio
 

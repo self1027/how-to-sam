@@ -8,6 +8,12 @@ Os exemplos deste guia foram criados para estudo. As tabelas abaixo reúnem afir
 
 Use as interpretações e referências para avaliar essas afirmações antes de aplicá-las em um projeto.
 
+**Diagrama — Mapa das distinções que sustentam o guia**
+
+![Mapa das distinções que sustentam o guia](diagramas/svg/12-conceitos.svg)
+
+[Ampliar SVG](diagramas/svg/12-conceitos.svg) · [Fonte editável (Mermaid)](diagramas/12-conceitos.mmd)
+
 ## 2. Runtime e desempenho
 
 | Formulação problemática | Interpretação tecnicamente mais precisa |

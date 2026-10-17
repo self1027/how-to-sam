@@ -85,6 +85,12 @@ Se a API confirmou antes de qualquer persistência e caiu logo depois, o desenho
 
 Para terceiros, trate resultados incertos: timeout não prova que a operação remota deixou de acontecer. Uma fila melhora entrega de trabalho, mas não resolve sozinha esse problema.
 
+**Diagrama — Webhook de pagamento: do aceite ao resultado**
+
+![Webhook de pagamento: do aceite ao resultado](diagramas/svg/11-webhook.svg)
+
+[Ampliar SVG](diagramas/svg/11-webhook.svg) · [Fonte editável (Mermaid)](diagramas/11-webhook.mmd)
+
 ## 6. Estudo de caso: dashboard cada vez mais lento
 
 O aplicativo e um painel administrativo consultam a mesma tabela de transações. O painel calcula totais por período, status e empresa, enquanto a tabela cresce.
@@ -94,6 +100,12 @@ Uma investigação coerente começa pelas consultas reais e seus planos, volume 
 Se a leitura analítica disputa recursos com a operação, considere réplicas ou um modelo de leitura separado. Dados históricos podem ser arquivados com um protocolo de recuperação. Não escolha sharding apenas porque a tabela atingiu uma quantidade arbitrária de linhas.
 
 **Critério de conclusão:** propor duas alternativas, indicar o efeito esperado e declarar o compromisso de consistência e operação de cada uma.
+
+**Diagrama — Dashboard lento: investigação e alternativas**
+
+![Dashboard lento: investigação e alternativas](diagramas/svg/11-dashboard.svg)
+
+[Ampliar SVG](diagramas/svg/11-dashboard.svg) · [Fonte editável (Mermaid)](diagramas/11-dashboard.mmd)
 
 ## 7. Estudo de caso: fluxo com IA
 

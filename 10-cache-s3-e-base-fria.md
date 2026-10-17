@@ -62,6 +62,12 @@ Uma chave de dashboard pode precisar incluir empresa, período, filtros e versã
 
 Quando a origem muda, você pode invalidar a entrada ou aceitar a defasagem até o TTL. A política precisa combinar com a regra de negócio. Expirar uma resposta em cache é diferente de remover automaticamente um registro durável por TTL no DynamoDB.
 
+**Diagrama — Cache-aside e proteção da origem**
+
+![Cache-aside e proteção da origem](diagramas/svg/10-cache.svg)
+
+[Ampliar SVG](diagramas/svg/10-cache.svg) · [Fonte editável (Mermaid)](diagramas/10-cache.mmd)
+
 ## 3. Complemento didático: cache stampede
 
 Se centenas de requisições encontram a mesma entrada expirada ao mesmo tempo, todas podem disparar a consulta pesada. O cache funciona bem enquanto está quente, mas a expiração gera um pico.
@@ -110,6 +116,12 @@ Esse protocolo é um **complemento didático** à estratégia de manter históri
 Uma aplicação também precisa localizar o histórico. Tentar o banco e, se nada vier, baixar arquivos ao acaso não cria uma estratégia de consulta. Um catálogo ou regra determinística de localização facilita a recuperação.
 
 Arquivar por idade costuma ter significado de negócio mais claro que simplesmente apagar tudo que excede um número de linhas. Nenhuma quantidade fixa de registros define quando um banco ficará lento: índices, tamanho dos dados e consultas importam.
+
+**Diagrama — Arquivar com recuperação verificável**
+
+![Arquivar com recuperação verificável](diagramas/svg/10-arquivo.svg)
+
+[Ampliar SVG](diagramas/svg/10-arquivo.svg) · [Fonte editável (Mermaid)](diagramas/10-arquivo.mmd)
 
 ## 7. Streams e backpressure
 

@@ -2,6 +2,12 @@
 
 **Objetivo:** escolher o armazenamento pelos acessos e garantias exigidos, e reconhecer o gargalo antes de distribuir dados.
 
+**Diagrama — Escolher pelo padrão de acesso**
+
+![Escolher pelo padrão de acesso](diagramas/svg/09-banco.svg)
+
+[Ampliar SVG](diagramas/svg/09-banco.svg) · [Fonte editável (Mermaid)](diagramas/09-banco.mmd)
+
 ## 1. O banco costuma limitar a escala do restante
 
 Aumentar o número de APIs e workers pode aumentar a pressão sobre o mesmo banco. Mais concorrência não cria mais capacidade de escrita, de conexão ou de atendimento a consultas automaticamente.
@@ -76,6 +82,12 @@ Um agrupador de produção deve descarregar o lote ao atingir **um tamanho ou um
 
 **Ajuste técnico:** cada insert não gera necessariamente um arquivo de binlog. O binary log contém eventos de alterações e transações, de acordo com o formato e a configuração. Lotes podem melhorar desempenho, mas o benefício não vem de uma regra “um registro = um binlog”. Veja o [manual do binary log do MySQL](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html).
 
+**Diagrama — Escrever em lote sem esperar indefinidamente**
+
+![Escrever em lote sem esperar indefinidamente](diagramas/svg/09-lote.svg)
+
+[Ampliar SVG](diagramas/svg/09-lote.svg) · [Fonte editável (Mermaid)](diagramas/09-lote.mmd)
+
 ## 5. MongoDB e modelagem de documentos
 
 MongoDB oferece um modelo flexível e uma oferta gerenciada, Atlas. O formato de documento pode ser conveniente quando os dados são lidos e alterados como um agregado.
@@ -116,6 +128,12 @@ console.log(estaVigente(registro, agoraSegundos + 30 * 60)); // false
 ```
 
 Para um bloqueio de 30 minutos, a aplicação precisa interpretar o timestamp. O TTL cuida de limpeza posterior, sem funcionar como um cronômetro exato de autorização.
+
+**Diagrama — Expiração lógica e limpeza física**
+
+![Expiração lógica e limpeza física](diagramas/svg/09-ttl.svg)
+
+[Ampliar SVG](diagramas/svg/09-ttl.svg) · [Fonte editável (Mermaid)](diagramas/09-ttl.mmd)
 
 ### Idempotência exige operação atômica
 
