@@ -4,6 +4,8 @@ Este guia reúne explicações, exemplos e exercícios sobre Node.js, arquitetur
 
 ## Sobre o material
 
+Este material consolida duas tardes de aulas privadas do curso Imersão Técnica, ministrado por [Samuel Santos](https://github.com/samsantosb).
+
 Cada capítulo traz conceitos, exemplos de código e perguntas de revisão. Os trechos marcados como complemento didático aprofundam o assunto. Os cuidados técnicos aparecem junto às explicações e estão reunidos no capítulo 12.
 
 As escolhas de arquitetura e infraestrutura dependem do projeto. Uma solução que funciona em uma empresa pode ter outro desempenho, custo ou disponibilidade em outra.
