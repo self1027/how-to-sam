@@ -4,16 +4,16 @@
 
 ## 1. Separar aceitação de processamento
 
-Uma fila permite que quem recebe o pedido não precise executar todo o trabalho imediatamente. Um consumidor pode retomar o processamento depois e ajustar a capacidade de consumo de forma independente.
+Com uma fila, a API pode receber o pedido e deixar o trabalho para um consumidor processar depois. A capacidade de processamento pode ser ajustada separadamente da API.
 
 ```text
 Cliente → API → fila → worker → banco / integração
                aceite       execução e resultado
 ```
 
-Se a API confirma que aceitou o trabalho, precisa saber o que essa confirmação significa. Responder antes de a publicação ter sido reconhecida pode levar o cliente a acreditar que algo foi aceito sem haver registro durável.
+Antes de confirmar ao cliente que aceitou o trabalho, a API precisa receber a confirmação de publicação na fila. Se responder antes disso, pode anunciar um aceite sem que exista um registro durável do pedido.
 
-Uma fila absorve variações temporárias de demanda. Se a entrada permanecer maior que a capacidade de processamento, o backlog continuará crescendo. Ela não cria capacidade infinita.
+Uma fila absorve picos temporários de demanda. Se chegam mais pedidos do que os consumidores conseguem processar por um período prolongado, o trabalho pendente, chamado de backlog, continua crescendo.
 
 ## 2. Fila e pub/sub têm efeitos diferentes
 
@@ -83,7 +83,7 @@ process.once('SIGINT', () => {
 });
 ```
 
-Esse snippet apenas demonstra o mecanismo. Não configura alta disponibilidade ou persistência. Um `jobId` pode ajudar a evitar repetição enquanto o registro do job existe, mas não substitui a idempotência do efeito de negócio: depois de removido, o mesmo ID pode voltar a ser aceito.
+O exemplo mostra como produzir e consumir jobs. Alta disponibilidade e persistência precisam ser configuradas à parte. O `jobId` ajuda a evitar repetição enquanto o registro do job existe. Depois que ele é removido, o mesmo ID pode ser aceito de novo. Por isso, o efeito de negócio também precisa ser idempotente.
 
 ### Por que memória e política de descarte importam?
 
@@ -91,7 +91,7 @@ Se os consumidores param, os jobs pendentes continuam ocupando espaço. Isso é 
 
 Redis usado como cache pode descartar chaves, mas esse comportamento não é aceitável para estruturas internas de uma fila. BullMQ recomenda `maxmemory-policy=noeviction`, além de configurar persistência e recuperação conforme a tolerância a perda. Consulte [Going to production](https://docs.bullmq.io/guide/going-to-production).
 
-A compatibilidade precisa ser verificada para a oferta e versão exatas. Na documentação consultada, BullMQ recomenda ElastiCache baseado em nós e aponta incompatibilidade com a política de memória da oferta serverless. Isso é uma restrição específica, não prova que todo Redis com algum autoscaling seja incompatível. Veja [BullMQ com AWS ElastiCache](https://docs.bullmq.io/guide/redis-tm-hosting/aws-elasticache).
+Verifique a compatibilidade da versão e da oferta que pretende usar. A documentação consultada do BullMQ recomenda ElastiCache baseado em nós e aponta um problema com a política de memória da oferta serverless. Essa restrição não se aplica automaticamente a todo Redis com autoscaling. Veja [BullMQ com AWS ElastiCache](https://docs.bullmq.io/guide/redis-tm-hosting/aws-elasticache).
 
 ## 4. SQS: serviço gerenciado de filas
 
@@ -105,7 +105,7 @@ Na integração com Lambda, o mapeamento de eventos faz a leitura e administra o
 
 ### DLQ e retries
 
-Uma *dead-letter queue* concentra mensagens que não puderam ser processadas segundo a política configurada. Ela precisa de acompanhamento, diagnóstico e um procedimento de reprocessamento. Transferir a mensagem para uma DLQ não conclui o objetivo do negócio.
+Uma *dead-letter queue* (DLQ) recebe as mensagens que não puderam ser processadas conforme a política configurada. A equipe precisa acompanhar essa fila, investigar as falhas e definir como tentar novamente. O trabalho de negócio ainda está pendente quando a mensagem chega à DLQ.
 
 Retries devem diferenciar falhas transitórias, como um timeout, de entradas definitivamente inválidas. Espera progressiva entre tentativas evita insistir imediatamente em uma dependência já saturada.
 
@@ -113,7 +113,7 @@ Retries devem diferenciar falhas transitórias, como um timeout, de entradas def
 
 O problema central aparece quando o efeito acontece, mas a confirmação se perde. Se uma cobrança foi aceita pelo provedor e o worker caiu antes de registrar a conclusão, a próxima tentativa não pode simplesmente cobrar de novo.
 
-Uma estratégia pode combinar uma chave estável da operação, uma restrição de unicidade local e idempotência no provedor. “Consultar se existe e depois inserir” em duas operações independentes não garante exclusão mútua sob concorrência.
+Uma estratégia pode combinar um identificador estável da operação, uma restrição de unicidade no banco local e idempotência no provedor. Fazer uma consulta e depois inserir em operações separadas não impede duplicatas: dois consumidores podem consultar antes de qualquer um deles gravar.
 
 **Complemento didático:** para um efeito inteiramente no mesmo PostgreSQL, uma transação pode registrar o evento e aplicar a mudança de forma atômica. O fragmento abaixo pressupõe `eventos_processados(evento_id PRIMARY KEY)` e `contas(id PRIMARY KEY, saldo_centavos)`:
 
@@ -136,7 +136,7 @@ WHERE id = $3
 COMMIT;
 ```
 
-Os parâmetros são fornecidos pelo cliente SQL. Uma repetição não reaplica o crédito. Para uma API externa, essa transação não engloba o efeito remoto: é necessário um protocolo adicional e reconciliação de resultados incertos.
+O cliente SQL fornece os parâmetros. Repetir o evento não aplica o crédito de novo. Se houver uma chamada a uma API externa, a transação local não cobre o efeito remoto. Será preciso definir como coordenar a operação e conferir o resultado quando houver dúvida sobre sua conclusão.
 
 <p align="center">
   <strong>Diagrama — Repetir o trabalho sem duplicar o efeito</strong>
@@ -154,7 +154,7 @@ Os parâmetros são fornecidos pelo cliente SQL. Uma repetição não reaplica o
 
 ## 6. Outbox resolve a escrita dupla
 
-O padrão outbox transacional resolve a necessidade de alterar o banco e publicar um evento sem deixar uma dessas operações esquecida. Ele não se resume a salvar dados em outro lugar quando Redis falha.
+O padrão outbox transacional guarda a alteração de negócio e o evento a publicar na mesma transação do banco. Assim, a necessidade de publicar fica registrada mesmo se o processo cair. Esse registro é feito como parte do fluxo, e não apenas quando Redis falha.
 
 Sem outbox, pode acontecer:
 
@@ -182,7 +182,9 @@ VALUES ($3, 'PedidoCriado', $1, $4::jsonb, NULL);
 COMMIT;
 ```
 
-Se o publicador cair depois de publicar e antes de marcar o registro, ele pode publicar de novo. Outbox, portanto, exige consumidores preparados para duplicatas e não garante “exatamente uma vez” de ponta a ponta. O publicador também precisa coordenar concorrência, tentativas, retenção e observabilidade. Veja o [padrão transactional outbox da AWS](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html).
+Se o publicador cair depois de publicar, mas antes de marcar o registro como enviado, poderá publicar o mesmo evento de novo. Por isso, os consumidores precisam lidar com duplicatas. Outbox não garante execução “exatamente uma vez” no fluxo inteiro.
+
+O publicador também precisa controlar publicações simultâneas, novas tentativas e tempo de retenção dos registros, além de registrar métricas e falhas. Veja o [padrão transactional outbox da AWS](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html).
 
 <p align="center">
   <strong>Diagrama — Outbox: resolver a escrita dupla</strong>
@@ -215,6 +217,11 @@ RabbitMQ e Kafka são outras tecnologias de mensageria a considerar. A escolha n
 3. Qual diferença entre backlog, vazamento e descarte de chaves?
 4. Qual falha o outbox evita e qual duplicidade ainda pode ocorrer?
 
-**Respostas esperadas:** pode haver repetição e ela precisa ser segura; consumidores concorrentes distribuem jobs; backlog é trabalho retido, vazamento é retenção indevida e descarte pode perder dados; outbox evita esquecer a publicação após o commit, mas o publicador pode reenviar.
+### Respostas esperadas
+
+1. A mensagem pode voltar a ser processada. O consumidor precisa reconhecer a repetição e evitar duplicar o efeito.
+2. Os consumidores da mesma fila dividem o trabalho entre si. Isso não garante uma cópia de cada evento para cada serviço.
+3. Backlog é trabalho pendente guardado para processamento. Vazamento é memória retida sem necessidade. Descartar chaves pode eliminar dados de que a fila ainda precisa.
+4. Outbox registra o evento junto com a alteração de negócio, evitando esquecer a publicação após o commit. O publicador ainda pode reenviar um evento se cair antes de marcá-lo como enviado.
 
 Próximo: [Bancos de dados e escala](09-bancos-de-dados-e-escalabilidade.md).

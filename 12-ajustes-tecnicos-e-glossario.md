@@ -1,12 +1,12 @@
 # 12 — Ajustes técnicos, limites e glossário
 
-**Objetivo:** esclarecer simplificações comuns e distinguir recomendações contextuais de regras técnicas.
+**Objetivo:** corrigir simplificações comuns e explicar quais escolhas dependem do projeto.
 
 ## 1. Como interpretar este guia
 
-Os exemplos deste guia foram criados para estudo. As tabelas abaixo reúnem afirmações que podem levar a conclusões incorretas quando usadas sem considerar o contexto.
+Os exemplos do guia servem para estudo. As tabelas reúnem frases que podem levar a erros e explicam o cuidado necessário em cada caso.
 
-Use as interpretações e referências para avaliar essas afirmações antes de aplicá-las em um projeto.
+Consulte as explicações e referências antes de aplicar essas ideias em um projeto.
 
 <p align="center">
   <strong>Diagrama — Mapa das distinções que sustentam o guia</strong>
@@ -24,7 +24,7 @@ Use as interpretações e referências para avaliar essas afirmações antes de 
 
 ## 2. Runtime e desempenho
 
-| Formulação problemática | Interpretação tecnicamente mais precisa |
+| Afirmação que exige cuidado | Como entender |
 | --- | --- |
 | Node.js trabalha em exatamente cinco threads | A thread principal e o pool da libuv são partes do processo; o total pode incluir outras threads |
 | Todo I/O assíncrono vai para quatro threads | Rede pode usar mecanismos do sistema operacional; tarefas específicas usam o pool |
@@ -42,7 +42,7 @@ As referências mais úteis para esses ajustes são o guia de [event loop e pool
 
 ## 3. Assincronismo, arquitetura e IA
 
-| Formulação problemática | Interpretação mais precisa |
+| Afirmação que exige cuidado | Como entender |
 | --- | --- |
 | `await` bloqueia o V8 inteiro | Suspende a continuação daquele fluxo; trabalho síncrono pesado é que ocupa a thread |
 | Fire-and-forget não interfere na latência | Pode sair do caminho de espera, mas continua concorrendo por recursos e pode causar impacto indireto |
@@ -58,11 +58,11 @@ As referências mais úteis para esses ajustes são o guia de [event loop e pool
 
 Para os contratos estáticos, consulte [TypeScript: erased types](https://www.typescriptlang.org/docs/handbook/2/basic-types.html#erased-types). Para trabalho JavaScript paralelo, veja [worker_threads](https://nodejs.org/api/worker_threads.html).
 
-Relatos de produtividade, número de PRs e tempo de entrega são experiências particulares. Comparações entre empresas, profissionais ou modelos de IA exigem critérios e evidências comparáveis.
+Relatos de produtividade, quantidade de PRs e tempo de entrega descrevem experiências específicas. Para comparar empresas, profissionais ou modelos de IA, use os mesmos critérios e evidências que possam ser comparadas.
 
 ## 4. Infraestrutura e dados
 
-| Formulação problemática | Interpretação mais precisa |
+| Afirmação que exige cuidado | Como entender |
 | --- | --- |
 | Stateless significa que o servidor dorme e perde memória | Significa não depender de estado local indispensável entre atendimentos |
 | Lambda não reaproveita estado em memória | Ambientes podem ser reutilizados; a aplicação não pode depender disso para correção |
@@ -89,23 +89,23 @@ Os ajustes podem ser conferidos nas páginas de [ambientes Lambda](https://docs.
 | AST | Árvore que representa a sintaxe do programa |
 | Bytecode | Representação intermediária executada por um interpretador |
 | JIT | Compilação realizada durante a execução |
-| Deoptimization | Abandono de um caminho otimizado quando suas hipóteses deixam de valer |
+| Deoptimization | O motor deixa de usar um caminho otimizado porque os dados ou o comportamento já não correspondem ao que ele esperava |
 | Hidden class / shape | Estrutura interna relacionada ao formato de objetos no motor |
 | Call stack | Pilha de chamadas síncronas em andamento |
-| Heap | Área de alocações dinâmicas gerenciadas pelo runtime |
+| Heap | Região de memória onde o runtime gerencia muitas alocações feitas durante a execução, como objetos |
 | GC | Garbage collector, coletor de lixo |
 | Event loop | Mecanismo de coordenação e execução de callbacks e eventos |
 | Worker pool | Conjunto de threads para tarefas específicas, como o pool da libuv |
 | Worker thread | Thread que pode executar JavaScript em paralelo |
-| Concorrência | Administração de trabalhos em andamento no mesmo período |
-| Paralelismo | Execução simultânea em recursos distintos |
+| Concorrência | Vários trabalhos em andamento no mesmo período |
+| Paralelismo | Trabalhos executados ao mesmo tempo em recursos diferentes |
 | Throughput | Quantidade de trabalho processada por unidade de tempo |
 | Latência | Tempo entre pontos definidos de uma operação |
 | Percentil | Posição em uma distribuição de observações |
-| DI | Fornecimento de dependências a um componente |
-| DIP | Princípio de inversão de dependência |
+| DI | Injeção de dependência: fornecer a um componente aquilo de que ele precisa para trabalhar |
+| DIP | Princípio de inversão de dependência: regras de alto nível dependem de contratos, e os detalhes implementam esses contratos |
 | DTO | Estrutura usada para transferir dados |
-| Schema de validação | Descrição verificável do formato e de restrições de dados |
+| Schema de validação | Define o formato e as restrições usados para verificar os dados |
 | Entry point | Ponto de entrada para explorar ou alterar uma implementação |
 | Guideline | Regra ou orientação de um escopo de trabalho |
 | Skill | Procedimento reutilizável executado com auxílio de um agente |
@@ -114,15 +114,15 @@ Os ajustes podem ser conferidos nas páginas de [ambientes Lambda](https://docs.
 | Blast radius | Alcance dos efeitos de uma falha |
 | Cold start | Inicialização necessária antes de atender uma execução |
 | Backlog | Trabalho pendente acumulado |
-| Backpressure | Controle de produção conforme a capacidade de consumo |
+| Backpressure | Ajuste da velocidade de envio à capacidade de quem recebe os dados |
 | Idempotência | Repetição de uma operação sem duplicar seu efeito pretendido |
 | DLQ | Fila para mensagens que esgotaram a política de processamento |
-| Outbox | Registro transacional de eventos destinados à publicação |
+| Outbox | Registro de eventos a publicar, salvo na mesma transação da alteração de negócio |
 | TTL | Time to Live, prazo de validade ou expiração |
 | Cache-aside | Consulta ao cache com carregamento pela aplicação quando falta uma entrada |
 | Réplica | Cópia usada para disponibilidade e/ou leitura, conforme o desenho |
 | Sharding | Distribuição de conjuntos de dados entre nós |
-| Base fria | Armazenamento de dados menos acessados, com características apropriadas ao histórico |
+| Base fria | Armazenamento voltado a dados pouco acessados, como históricos antigos |
 | SRE | Site Reliability Engineering, disciplina de confiabilidade de sistemas |
 
 Voltar ao [índice de estudo](README.md).

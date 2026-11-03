@@ -1,12 +1,12 @@
 # Guia de estudo — Node.js, arquitetura, IA e infraestrutura
 
-Este guia reúne explicações, exemplos e exercícios sobre Node.js, arquitetura de software, desenvolvimento com IA e infraestrutura. O objetivo é entender os mecanismos e conseguir justificar decisões de engenharia, em vez de apenas decorar ferramentas.
+Este guia reúne explicações, exemplos e exercícios sobre Node.js, arquitetura de software, desenvolvimento com IA e infraestrutura. Você vai estudar como cada parte funciona e quando faz sentido usá-la.
 
 ## Sobre o material
 
-Os capítulos combinam conceitos, snippets de código e perguntas de revisão. Os exemplos são didáticos; trechos que ampliam a discussão são identificados como **complemento didático**. As ressalvas técnicas aparecem junto ao assunto e são reunidas no capítulo 12.
+Cada capítulo traz conceitos, exemplos de código e perguntas de revisão. Os trechos marcados como complemento didático aprofundam o assunto. Os cuidados técnicos aparecem junto às explicações e estão reunidos no capítulo 12.
 
-As recomendações de arquitetura e infraestrutura dependem do contexto. Não são garantias de desempenho, disponibilidade ou adequação para qualquer empresa.
+As escolhas de arquitetura e infraestrutura dependem do projeto. Uma solução que funciona em uma empresa pode ter outro desempenho, custo ou disponibilidade em outra.
 
 ## Ordem de leitura
 
@@ -49,9 +49,11 @@ Os exemplos JavaScript completos usam módulos ES: salve o bloco em um arquivo `
 
 Blocos descritos como **fragmento** dependem das funções, clientes ou tabelas indicados no texto. Exemplos com BullMQ, Zod e SDKs precisam das dependências mencionadas. SQL, configurações de infraestrutura e nomes de tabela são ilustrativos: não há necessidade de contratar serviços para estudar o material.
 
-Uma boa sequência de estudo é ler o conceito, prever a saída do snippet, executá-lo e explicar por que o resultado ocorreu. Depois responda às perguntas do capítulo sem consultá-lo. Use o capítulo 11 para revisar as relações entre runtime, aplicação e infraestrutura.
+Para estudar, leia o conceito e tente prever a saída do código antes de executá-lo. Depois, explique o resultado com suas palavras e responda às perguntas sem consultar o capítulo. No capítulo 11, pratique como runtime, aplicação e infraestrutura trabalham juntos.
 
-Na preparação do material, foram conferidos os links locais e a sintaxe dos 21 blocos JavaScript/TypeScript, removendo as anotações de tipos para a checagem sintática dos trechos TypeScript. Foram executados 16 exemplos locais, incluindo ordem das chamadas, espera assíncrona, cache, expiração lógica e compactação por streams. Isso não equivale à checagem estática de tipos pelo `tsc`. Os exemplos que exigem Redis, banco, Zod ou serviços externos não foram executados em integração.
+Os links locais e a sintaxe dos 21 blocos JavaScript/TypeScript foram conferidos na preparação do material. Nos trechos TypeScript, essa checagem removeu as anotações de tipos; ela não substitui a verificação com `tsc`.
+
+Também foram executados 16 exemplos locais: ordem das chamadas, espera assíncrona, cache, expiração lógica e compactação por streams. Os exemplos com Redis, banco, Zod ou serviços externos não foram executados em integração.
 
 ## Referências técnicas
 

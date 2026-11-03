@@ -1,6 +1,6 @@
 # 09 — Bancos de dados, consistência e escala
 
-**Objetivo:** escolher o armazenamento pelos acessos e garantias exigidos, e reconhecer o gargalo antes de distribuir dados.
+**Objetivo:** escolher onde guardar os dados conforme as consultas e garantias necessárias, e identificar o gargalo antes de distribuí-los.
 
 <p align="center">
   <strong>Diagrama — Escolher pelo padrão de acesso</strong>
@@ -18,7 +18,7 @@
 
 ## 1. O banco costuma limitar a escala do restante
 
-Aumentar o número de APIs e workers pode aumentar a pressão sobre o mesmo banco. Mais concorrência não cria mais capacidade de escrita, de conexão ou de atendimento a consultas automaticamente.
+Mais APIs e workers podem gerar mais acessos ao mesmo banco. A capacidade de gravar, manter conexões e responder a consultas não aumenta automaticamente junto com eles.
 
 Antes de migrar de tecnologia, investigue consultas lentas, índices, volume transferido, transações longas, locks, pools e recursos da máquina. Um banco com CPU baixa também pode estar sofrendo com espera por I/O ou bloqueios.
 
@@ -43,7 +43,7 @@ Uma região AWS contém zonas de disponibilidade distintas. Uma implantação Mu
 | Particionamento de tabela | Organização de partes de uma tabela | Só ajuda consultas e manutenção compatíveis com a divisão |
 | Sharding | Distribuição dos dados entre nós | Roteamento, reequilíbrio, joins e transações distribuídas |
 
-Uma réplica pode apresentar atraso em relação à escrita. Se uma tela precisa ler imediatamente o resultado de uma alteração, defina como atender a consistência necessária. “Todos os bancos são eventualmente consistentes” é uma generalização incorreta: a garantia depende da operação e da configuração.
+Uma réplica pode demorar a receber uma alteração. Se uma tela precisa mostrar o dado logo após a gravação, defina como garantir essa leitura. A consistência depende da operação e da configuração; não é correto dizer que todos os bancos são eventualmente consistentes.
 
 ## 3. Índices e plano de consulta
 
@@ -63,7 +63,7 @@ ORDER BY criado_em DESC, id DESC
 LIMIT 50;
 ```
 
-Os parâmetros de cursor são a data e o ID do último item da página anterior. Para a primeira página, omita a condição do cursor. O segundo campo de ordenação torna determinística a posição quando duas transações têm a mesma data.
+O cursor usa a data e o ID do último item da página anterior. Na primeira página, omita a condição do cursor. O ID desempata a ordem quando duas transações têm a mesma data.
 
 Avalie o índice no plano de execução e com dados representativos. Um scan pode ser uma boa escolha quando grande parte da tabela é necessária; não é automaticamente um erro. Consulte [Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) e a [documentação de índices](https://www.postgresql.org/docs/current/indexes.html).
 
@@ -71,7 +71,7 @@ Avalie o índice no plano de execução e com dados representativos. Um scan pod
 
 ## 4. Escrita em lote
 
-Agrupar eventos de webhook pode reduzir o custo de gravar um a um. Um lote pode reduzir viagens de rede e custo por comando ou transação. Isso não significa comprimir todos os eventos em uma única linha.
+Gravar eventos de webhook em lote pode reduzir as chamadas de rede e o custo por comando ou transação. Os eventos continuam em linhas separadas; o lote agrupa o envio ao banco.
 
 Exemplo de inserção de vários eventos, supondo uma chave única em `evento_id`:
 
@@ -86,7 +86,7 @@ ON CONFLICT (evento_id) DO NOTHING;
 
 O chamador fornece os parâmetros e precisa decidir como acompanhar os itens já existentes, inválidos ou rejeitados. Se o lote causa outros efeitos, ignorar conflitos não torna todo o fluxo idempotente por si só.
 
-Um agrupador de produção deve descarregar o lote ao atingir **um tamanho ou um tempo máximo**, o que acontecer primeiro. Esperar sempre 500 itens pode atrasar indefinidamente um fluxo com baixo volume. Também é preciso persistir o trabalho pendente e definir a confirmação das mensagens.
+Em produção, envie o lote ao atingir um tamanho ou um tempo máximo, o que acontecer primeiro. Se você esperar sempre 500 itens, um fluxo com pouco volume pode ficar parado indefinidamente. Também defina como salvar o trabalho pendente e quando confirmar as mensagens.
 
 **Ajuste técnico:** cada insert não gera necessariamente um arquivo de binlog. O binary log contém eventos de alterações e transações, de acordo com o formato e a configuração. Lotes podem melhorar desempenho, mas o benefício não vem de uma regra “um registro = um binlog”. Veja o [manual do binary log do MySQL](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html).
 
@@ -108,7 +108,7 @@ Um agrupador de produção deve descarregar o lote ao atingir **um tamanho ou um
 
 MongoDB oferece um modelo flexível e uma oferta gerenciada, Atlas. O formato de documento pode ser conveniente quando os dados são lidos e alterados como um agregado.
 
-Flexibilidade de esquema não significa ausência de modelagem. É preciso escolher o que incorporar, o que referenciar, como indexar e quais invariantes manter. NoSQL também não significa consistência automaticamente superior ou sharding sem dificuldades.
+Mesmo com um esquema flexível, você precisa modelar os dados: escolher o que guardar no mesmo documento, o que referenciar, quais índices criar e quais regras devem ser sempre respeitadas. Usar NoSQL não garante consistência superior nem elimina as dificuldades de sharding.
 
 Usar MongoDB em projetos simples ou como banco auxiliar é uma escolha contextual. Um projeto pequeno pode usar banco relacional; um sistema grande pode usar documentos. A decisão deve partir das consultas, transações, garantias e conhecimento da equipe.
 
@@ -143,7 +143,7 @@ console.log(estaVigente(registro, agoraSegundos));          // true
 console.log(estaVigente(registro, agoraSegundos + 30 * 60)); // false
 ```
 
-Para um bloqueio de 30 minutos, a aplicação precisa interpretar o timestamp. O TTL cuida de limpeza posterior, sem funcionar como um cronômetro exato de autorização.
+Para um bloqueio de 30 minutos, a aplicação deve comparar o timestamp com o horário atual. O TTL remove o item depois; ele não controla o momento exato em que o bloqueio termina.
 
 <p align="center">
   <strong>Diagrama — Expiração lógica e limpeza física</strong>
@@ -163,13 +163,13 @@ Para um bloqueio de 30 minutos, a aplicação precisa interpretar o timestamp. O
 
 Ler uma chave e depois gravá-la pode permitir que dois consumidores executem o mesmo efeito. Escritas condicionais podem adquirir uma chave apenas se a condição ainda for verdadeira. A AWS descreve essas operações em [Condition expressions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ConditionExpressions.html).
 
-Mesmo uma chave adquirida atomicamente não resolve sozinha uma falha após um efeito externo. Defina estados, conclusão, duração da proteção e recuperação de operações incertas. Excluir uma chave cedo demais pode permitir repetição; mantê-la para sempre pode impedir uma operação legítima.
+Mesmo que só um consumidor consiga registrar a chave, ele ainda pode falhar depois de realizar um efeito externo. Defina os estados da operação, como confirmar sua conclusão, por quanto tempo manter a proteção e como recuperar resultados incertos. Remover a chave cedo demais pode permitir duplicatas; mantê-la para sempre pode bloquear uma operação legítima.
 
 DAX é uma camada de cache para DynamoDB, não um substituto universal para Redis. Não há justificativa para assumir que toda operação DynamoDB seja sempre mais rápida ou que o serviço nunca falhe.
 
 ## 7. Um banco auxiliar também acrescenta complexidade
 
-Gravar primeiro em uma base e depois consolidar em outra pode reduzir a pressão do banco principal. Entretanto, cria duas visões que precisam de uma relação explícita: fonte de verdade, atraso permitido, reconciliação e tratamento de falhas.
+Gravar primeiro em uma base e depois consolidar em outra pode aliviar o banco principal. Mas você passa a ter duas versões dos dados. Defina qual é a fonte oficial, quanto atraso é aceitável, como corrigir diferenças e o que fazer se a cópia falhar.
 
 Se você usar DynamoDB para dados recentes e PostgreSQL para consolidação, explique o que a aplicação faz enquanto a cópia ainda não chegou. Um dashboard que admite atraso pode aceitar essa arquitetura; uma regra que exige consistência imediata talvez precise de outro desenho.
 
@@ -180,6 +180,11 @@ Se você usar DynamoDB para dados recentes e PostgreSQL para consolidação, exp
 3. Por que um lote deve ter também um prazo máximo de espera?
 4. Por que uma chave DynamoDB expirada pode continuar existindo?
 
-**Respostas esperadas:** réplicas de leitura aliviam consultas e não substituem o escritor; filtros, ordenação e distribuição dos dados importam; baixo volume pode nunca preencher o lote; TTL faz remoção assíncrona e a validade deve ser interpretada pela aplicação.
+### Respostas esperadas
+
+1. Réplicas de leitura aliviam consultas, mas não distribuem automaticamente as gravações do banco principal.
+2. Compare os campos do índice com os filtros, a ordenação e a distribuição dos dados. Confira o resultado no plano de execução.
+3. Com pouco volume, o lote pode nunca atingir o tamanho esperado. Um prazo máximo impede que os itens fiquem esperando indefinidamente.
+4. O DynamoDB remove itens expirados de forma assíncrona. Até a remoção, a aplicação precisa usar o timestamp para decidir se o item ainda é válido.
 
 Próximo: [Cache, S3 e base fria](10-cache-s3-e-base-fria.md).

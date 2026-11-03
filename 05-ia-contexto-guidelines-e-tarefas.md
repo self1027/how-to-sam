@@ -1,8 +1,8 @@
 # 05 — IA, contexto, guidelines e tarefas pequenas
 
-**Objetivo:** transformar regras e rotinas de engenharia em contexto útil, tarefas verificáveis e ciclos de aprendizado.
+**Objetivo:** dar à IA o contexto necessário, definir tarefas que possam ser verificadas e aprender com os resultados.
 
-## 1. A tese central: organizar o trabalho antes de automatizá-lo
+## 1. Organizar o trabalho antes de automatizá-lo
 
 Gerar código rapidamente não resolve, sozinho, a entrega de software. Ainda é preciso definir o problema, controlar dependências, verificar comportamento e observar os resultados depois da publicação.
 
@@ -22,11 +22,11 @@ Uma abordagem é separar memória/configuração, regras e procedimentos reutili
 
 `CLAUDE.md` e `AGENTS.md` são exemplos de arquivos usados por ferramentas; não existe uma semântica universal que torne ambos apenas memória. Carregamento, escopo e prioridade dependem do agente utilizado. `guidelines.md` também não é lido automaticamente por toda ferramenta.
 
-O desenho útil é ter uma referência clara para a documentação pertinente e evitar repetir regras conflitantes em vários lugares.
+Indique onde encontrar a documentação de cada assunto e evite manter versões conflitantes da mesma regra.
 
 ## 3. Guidelines por domínio
 
-Uma guideline deve expressar restrições concretas e observáveis. “Escreva código bom” não explica o que fazer; “represente os valores deste módulo em centavos inteiros” orienta uma decisão.
+Uma guideline deve dizer o que fazer de um jeito que possa ser conferido. Por exemplo, “represente os valores deste módulo em centavos inteiros” dá uma orientação mais útil que “escreva código bom”.
 
 Exemplo de conteúdo para `src/modules/pagamentos/guidelines.md`:
 
@@ -45,11 +45,11 @@ Exemplo de conteúdo para `src/modules/pagamentos/guidelines.md`:
 
 Centavos evitam vários problemas de representação decimal, mas não dispensam limites, regras de arredondamento de taxas, tratamento de moedas e escolha do tipo numérico. Não transforme uma convenção local em regra para todo sistema.
 
-Uma convenção possível é a precedência “subdomínio → domínio → global”. Isso pode ser uma convenção do projeto para regras locais compatíveis. Ela não permite ignorar instruções de prioridade superior, autorização do usuário ou requisitos que a ferramenta imponha. Uma regra de apresentação local, por exemplo, não substitui a política de acesso a dados da organização.
+O projeto pode adotar a ordem “subdomínio → domínio → global” para resolver regras locais compatíveis. Essa convenção deve respeitar as instruções de prioridade superior, a autorização do usuário e os requisitos da ferramenta. Uma regra local de apresentação, por exemplo, não substitui a política de acesso a dados da organização.
 
 ## 4. Skills como procedimentos parametrizados
 
-A analogia com funções é útil: uma skill recebe uma intenção e dados, segue instruções e produz um resultado. Diferentemente de uma função pura, a execução por um modelo pode variar e envolver ferramentas, contexto incompleto e decisões.
+Uma skill se parece com uma função: recebe uma intenção e dados, segue etapas e produz um resultado. Mas sua execução pode variar, pois o modelo toma decisões, usa ferramentas e pode trabalhar com informações incompletas.
 
 Um procedimento precisa informar entrada, etapas e critério de conclusão. Exemplo didático em texto, sem depender do formato de uma plataforma específica:
 
@@ -77,7 +77,7 @@ Parâmetros estáveis podem ser registrados em configuração, como caminho de l
 
 ## 5. Uma tarefa boa limita o problema e define sucesso
 
-*Entry points* são os arquivos por onde começar a investigação. Eles são pontos de entrada, não uma proibição de consultar outras dependências quando o raciocínio exigir.
+*Entry points* são os arquivos por onde começar a investigação. Consulte outras dependências sempre que precisar delas para entender o problema.
 
 Exemplo de tarefa:
 
@@ -129,7 +129,7 @@ Dor de produto
 
 Revisão humana entre etapas e revisões especializadas ajudam a verificar temas como segurança, desempenho e testes. Isso evita concentrar toda a análise em um pedido amplo demais.
 
-Cada revisão deve produzir achados concretos, localização e consequência. Comentários genéricos não substituem evidência. Uma revisão de desempenho, por exemplo, deve indicar o caminho afetado e a medição necessária, não apenas sugerir “otimizar”.
+Cada revisão deve apontar o problema, onde ele está e qual efeito pode causar. Em uma revisão de desempenho, por exemplo, indique o trecho afetado e o que medir para confirmar a suspeita. Pedir apenas para “otimizar” não orienta a correção.
 
 A integração com sistemas de tarefas, repositórios e canais de comunicação via ferramentas/MCP permite automatizar partes do fluxo: ler, escrever e enviar mensagens dependem das permissões e do escopo autorizado em cada ambiente.
 
@@ -159,7 +159,7 @@ Medidas práticas incluem manter documentação curta, aproximar regras do códi
 
 Número de PRs e linhas geradas mostram atividade, mas não medem isoladamente valor entregue. Acompanhe também tempo até uma mudança útil chegar ao usuário, defeitos, retrabalho, incidentes e recuperação.
 
-Cycle time é o tempo entre pontos definidos do fluxo, por exemplo, início da implementação e conclusão. O valor só pode ser comparado quando os pontos de início e fim são consistentes. Uma duração desejável depende do contexto da equipe e não constitui um padrão obrigatório de mercado.
+Cycle time é o tempo entre dois pontos do fluxo, como o início e o fim da implementação. Para comparar os valores, use sempre os mesmos pontos. O tempo desejável depende da equipe; não há uma duração obrigatória para todo o mercado.
 
 ## Revisão ativa
 
@@ -168,6 +168,11 @@ Cycle time é o tempo entre pontos definidos do fluxo, por exemplo, início da i
 - Quando reduzir contexto passa a esconder informação necessária?
 - O que você verificaria antes de concluir que a IA melhorou a entrega da equipe?
 
-**Respostas esperadas:** regras recorrentes ficam próximas do domínio e resultados específicos ficam na tarefa; descreva comportamento observável; inclua dependências que alteram a decisão; compare qualidade, fluxo, retrabalho e resultados, além de velocidade.
+### Respostas esperadas
+
+1. A guideline guarda regras recorrentes do domínio. A tarefa descreve a mudança e o resultado esperado naquele caso.
+2. Descreva um comportamento que possa ser observado, como rejeitar uma entrada inválida sem alterar o banco.
+3. Quando o recorte deixa de incluir contratos, regras ou dependências que mudam a solução.
+4. Compare qualidade, tempo de entrega, retrabalho e resultados para o usuário. Gerar código mais rápido, sozinho, não demonstra melhora na entrega.
 
 Próximo: [Testes e entrega gradual](06-testes-feature-flags-e-entrega.md).

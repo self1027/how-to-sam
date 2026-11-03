@@ -4,9 +4,9 @@
 
 ## 1. A proposta de arquitetura modular
 
-Arquitetura modular com camadas conhecidas é uma opção para equipes que precisam entregar rapidamente. A justificativa é reduzir o esforço para navegar, testar e alterar o código, mantendo limites de negócio claros.
+Uma arquitetura modular com camadas conhecidas pode ajudar equipes que precisam entregar rapidamente. Ela busca facilitar a localização, o teste e a alteração do código, deixando claro o que pertence a cada área do negócio.
 
-Isso combina duas dimensões independentes:
+Módulos e camadas organizam o código de formas diferentes:
 
 - **Módulos:** agrupam capacidades de negócio, como pagamentos, usuários ou reservas.
 - **Camadas:** separam responsabilidades técnicas dentro de cada módulo, como receber uma requisição, executar uma regra e persistir dados.
@@ -37,7 +37,7 @@ src/
 
 Uma organização apenas por pastas globais, como `controllers/`, `services/` e `repositories/`, costuma espalhar uma mesma funcionalidade por muitos lugares. Agrupar por domínio pode reduzir essa dispersão.
 
-Não é o nome da pasta que cria isolamento. Se qualquer módulo acessa diretamente tabelas e detalhes internos de outro, o acoplamento permanece.
+Para isolar módulos, é preciso controlar como eles se acessam. Se um módulo usa diretamente as tabelas e os detalhes internos de outro, os dois continuam acoplados, mesmo em pastas separadas.
 
 ## 2. Responsabilidades das camadas
 
@@ -102,7 +102,7 @@ console.log(await buscarUsuario('u1'));
 console.log(await buscarUsuario('u2'));
 ```
 
-A função recebe a dependência: isso é DI. O contrato pedido pelo caso de uso não exige detalhes de uma ORM específica: isso exemplifica a intenção do DIP. A função `criarBuscarUsuario` também funciona como uma fábrica de comportamento configurado.
+A função recebe o repositório por argumento: isso é DI. O caso de uso pede apenas o contrato de consulta, sem depender de uma ORM específica: esse é o objetivo do DIP no exemplo. A função `criarBuscarUsuario` cria uma função de busca já configurada com o repositório escolhido.
 
 O contrato pode ser declarado com `interface` ou `type`. Não é necessário escrever `implements` em toda classe: a compatibilidade estrutural permite que um valor satisfaça o formato esperado. Veja o [Handbook de interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html).
 
@@ -122,7 +122,7 @@ O contrato pode ser declarado com `interface` ou `type`. Não é necessário esc
 
 ## 4. Tipos não existem em runtime, mas têm valor
 
-Interfaces e anotações de tipos são removidas no processo de transformação para JavaScript. Isso impede usar apenas uma interface para verificar um JSON recebido pela rede. Não elimina sua função de checagem estática, documentação e apoio à refatoração. A documentação de [tipos apagados do TypeScript](https://www.typescriptlang.org/docs/handbook/2/basic-types.html#erased-types) explica essa distinção.
+Interfaces e anotações de tipos são removidas na transformação para JavaScript. Elas ajudam a verificar o código antes da execução, documentar contratos e fazer refatorações. Para conferir um JSON recebido pela rede, você precisa de validação em runtime. Veja a documentação de [tipos apagados do TypeScript](https://www.typescriptlang.org/docs/handbook/2/basic-types.html#erased-types).
 
 **Ajuste técnico:** a ausência da interface em runtime não torna DI ou DIP inúteis. Esses mecanismos também ajudam a explicitar dependências, variar configurações, testar componentes e substituir integrações. Sua utilidade depende do problema, não de o tipo ocupar memória durante a execução.
 
@@ -154,13 +154,13 @@ Para testá-lo isoladamente, o runner precisa oferecer uma forma compatível de 
 | É fácil trocar por requisição ou teste? | Pode depender do runner | Pode receber outro objeto/função |
 | É obrigatório usar classes? | Não | Não |
 
-Escolha o desenho cujo custo seja proporcional ao problema. Simplicidade é reduzir o esforço total de evoluir o sistema, não apenas contar arquivos.
+Escolha o desenho que facilite a evolução do sistema com um custo adequado ao problema. A quantidade de arquivos, sozinha, não mostra se uma solução é simples de manter.
 
 ## 6. Limites entre módulos
 
 O arquivo `index.ts` pode expor uma API pública do módulo. Outros módulos importam essa API, em vez de acessar livremente detalhes internos. Regras de lint, revisão e testes arquiteturais podem reforçar o limite quando necessário.
 
-Ao separar um módulo em serviço, uma chamada local talvez precise virar HTTP ou mensagem. Essa mudança introduz latência, indisponibilidade parcial, autenticação, retries e consistência distribuída. Portanto, modularidade facilita uma extração, mas não a torna automática.
+Ao transformar um módulo em serviço, uma chamada local pode virar uma chamada HTTP ou uma mensagem. Será preciso lidar com tempo de rede, autenticação, novas tentativas e falhas em que só parte do sistema fica indisponível. Manter os dados consistentes entre serviços também exige cuidado. Os módulos facilitam essa separação, mas ainda há trabalho a fazer.
 
 Uma regra que precisa de uma transação envolvendo várias tabelas merece atenção especial: mover metade dela para outro serviço muda as garantias do fluxo.
 
@@ -170,7 +170,7 @@ Uma resposta técnica convincente liga a decisão ao contexto:
 
 > Para uma equipe pequena, começaria com um monólito modular. Cada módulo concentraria suas regras e usaria camadas simples. Isso reduz o custo de navegação e operação. Contratos seriam explícitos nas integrações e fronteiras que precisam de substituição. Separaria serviços quando houver um motivo concreto de escala, autonomia ou isolamento.
 
-Essa é uma proposta argumentada, não uma regra universal. Arquiteturas hexagonal, clean, MVC e em camadas podem atender necessidades distintas e compartilhar vários princípios.
+Essa proposta depende do contexto descrito. Arquiteturas hexagonal, clean, MVC e em camadas podem atender necessidades diferentes e compartilhar vários princípios.
 
 ## Revisão ativa
 
@@ -179,6 +179,11 @@ Essa é uma proposta argumentada, não uma regra universal. Arquiteturas hexagon
 3. Por que um tipo estático não valida automaticamente uma resposta HTTP?
 4. Quais garantias mudam quando um import local vira uma chamada de rede?
 
-**Respostas esperadas:** domínio aproxima uma funcionalidade e camada agrupa responsabilidades técnicas; o repositório é fornecido como argumento; tipos são apagados; a rede introduz falhas parciais e outras exigências de consistência e recuperação.
+### Respostas esperadas
+
+1. A organização por domínio reúne o código de uma funcionalidade. A organização por camada reúne responsabilidades técnicas, como controllers e repositories.
+2. Sim. No exemplo, `criarBuscarUsuario` recebe o repositório como argumento.
+3. Os tipos são removidos na transformação para JavaScript. A resposta HTTP precisa ser validada durante a execução.
+4. A chamada passa a depender da rede e pode falhar mesmo com parte do sistema funcionando. É preciso rever consistência e recuperação.
 
 Próximo: [IA, contexto e tarefas](05-ia-contexto-guidelines-e-tarefas.md).

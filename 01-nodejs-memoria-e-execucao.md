@@ -6,7 +6,7 @@
 
 JavaScript é a linguagem. Node.js fornece um ambiente para executá-la fora do navegador, com APIs de arquivos, rede, processos e outros recursos do sistema operacional.
 
-Dois componentes ajudam a organizar esse entendimento:
+Para entender a execução, veja o papel de cada parte:
 
 | Componente | Responsabilidade |
 | --- | --- |
@@ -15,11 +15,11 @@ Dois componentes ajudam a organizar esse entendimento:
 | APIs e bindings do Node.js | Conectar o código JavaScript a funcionalidades nativas, como sistema de arquivos e criptografia |
 | Sistema operacional | Executar threads e processos e oferecer mecanismos de I/O |
 
-Essa divisão é um modelo didático. O Node.js inclui outras bibliotecas e subsistemas, e uma chamada pode atravessar mais de um componente.
+Essa divisão simplifica o estudo. O Node.js tem outras bibliotecas e partes internas, e uma chamada pode passar por vários componentes.
 
 ## 2. O que significa dizer que JavaScript é single-thread?
 
-No uso comum, os callbacks JavaScript de um mesmo event loop executam um de cada vez. Se uma função ocupa a thread principal fazendo um cálculo longo, os outros callbacks precisam esperar.
+No uso comum, um mesmo event loop executa os callbacks JavaScript um de cada vez. Se uma função faz um cálculo longo na thread principal, os outros callbacks precisam esperar.
 
 Isso não significa que o processo inteiro possua apenas uma thread. Há trabalho nativo em outras threads e é possível criar threads JavaScript explicitamente. I/O de rede também pode avançar pelo sistema operacional sem ocupar uma thread do pool para cada conexão. A documentação distingue o [event loop do worker pool](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
@@ -81,11 +81,11 @@ B: fim
 A: fim
 ```
 
-Quando `c()` está executando, as chamadas a `a()` e `b()` ainda não terminaram. Elas precisam recuperar o controle para continuar. Por isso, a primeira função chamada é a última a terminar nesse encadeamento.
+Enquanto `c()` executa, `a()` e `b()` ficam esperando. Quando `c()` termina, `b()` continua; depois, `a()` continua. Nesse encadeamento, a primeira função chamada é a última a terminar.
 
 ### Stack trace
 
-Um objeto `Error` normalmente fornece um registro de chamadas útil para diagnóstico. Ele ajuda a localizar o ponto de criação do erro e o caminho relevante até ele. Não é uma cópia de todos os dados da memória nem, necessariamente, uma representação completa de todas as operações assíncronas da aplicação.
+Um objeto `Error` normalmente registra as chamadas que ajudam a localizar onde o erro foi criado e como o código chegou até ali. Esse registro não copia os dados da memória e pode não mostrar todas as operações assíncronas envolvidas.
 
 **Complemento didático:** lançar uma exceção altera o fluxo de controle. O runtime procura um tratador aplicável; chamadas podem ser abandonadas durante essa propagação. Já a criação de `new Error()` e o lançamento com `throw` são operações distintas.
 
@@ -115,7 +115,7 @@ Esse exemplo resolve o crescimento da pilha, mas o laço continua consumindo CPU
 
 ## 5. Heap: objetos e suas referências
 
-O heap é a região gerenciada pelo motor para muitas alocações dinâmicas, como objetos. Variáveis podem referenciar o mesmo objeto; copiar a referência não copia o conteúdo.
+O heap é uma região de memória gerenciada pelo motor, onde ficam muitas alocações feitas durante a execução, como objetos. Duas variáveis podem apontar para o mesmo objeto. Nesse caso, copiar a referência não copia o conteúdo.
 
 ```js
 const original = { nome: 'Ana', preferencias: { tema: 'claro' } };
@@ -131,13 +131,13 @@ console.log(copiaRasa === original);    // false
 console.log(copiaRasa.preferencias === original.preferencias); // true
 ```
 
-O spread criou outro objeto externo, mas `preferencias` continua compartilhado. Isso importa tanto para efeitos colaterais quanto para retenção de memória.
+O spread criou um novo objeto externo, mas os dois ainda apontam para o mesmo objeto `preferencias`. Por isso, mudar o tema pela cópia também altera o original. Referências compartilhadas também podem manter objetos na memória.
 
 A explicação “primitivos na stack e objetos no heap” serve de introdução, mas não é uma regra física universal. Representação de números e strings, closures e otimizações variam. No trabalho cotidiano, entender identidade, referências e tempo de vida costuma ser mais útil do que pressupor a localização de cada valor.
 
 ## 6. Garbage collector: liberar o que perdeu utilidade
 
-O coletor de lixo recupera memória de objetos que deixaram de ser alcançáveis a partir das referências mantidas pelo programa. Sair de uma função não garante liberar todos os objetos criados nela: outra parte do código pode continuar referenciando-os.
+O coletor de lixo recupera a memória de objetos que o programa já não consegue alcançar por suas referências. Terminar uma função não libera necessariamente os objetos criados nela: outra parte do código pode continuar apontando para eles.
 
 Uma causa comum de crescimento de memória é uma coleção global que nunca descarta entradas:
 
@@ -156,7 +156,7 @@ cache.delete('pedido-1');
 console.log(cache.size); // 0
 ```
 
-Em um cache real, defina limite, política de expiração e descarte. O coletor não interpreta sua intenção de negócio: se o `Map` segue alcançável e contém a entrada, ela continua necessária para o programa do ponto de vista do runtime.
+Em um cache real, defina quantas entradas guardar, quando elas expiram e como serão removidas. O coletor não sabe se o negócio ainda precisa de uma entrada. Enquanto o programa consegue alcançar o `Map` e a entrada está nele, ela permanece acessível.
 
 Referências circulares, sozinhas, não provam vazamento: coletores modernos conseguem recuperar ciclos inteiramente inalcançáveis. “Orinoco” está relacionado à evolução do coletor do V8; não significa que toda memória será devolvida imediatamente ao sistema operacional. O artigo [Trash talk: the Orinoco garbage collector](https://v8.dev/blog/trash-talk) explica alcançabilidade e coleta.
 
@@ -187,6 +187,11 @@ Antes de alterar parâmetros do runtime, descubra qual recurso está sob pressã
 3. Por que um objeto criado dentro de uma função pode continuar ocupando memória?
 4. Por que aumentar `UV_THREADPOOL_SIZE` não acelera automaticamente um cálculo JavaScript?
 
-**Respostas esperadas:** chamadas internas precisam terminar antes das externas; referências podem compartilhar a mesma identidade; referências externas prolongam a alcançabilidade; o pool executa tarefas nativas específicas e não distribui automaticamente seu JavaScript.
+### Respostas esperadas
+
+1. `c()` precisa terminar para `b()` continuar, e `b()` precisa terminar para `a()` continuar. A última chamada a entrar é a primeira a sair.
+2. Copiar uma referência faz duas variáveis apontarem para o mesmo objeto. Copiar o objeto cria outro objeto, embora uma cópia rasa ainda possa compartilhar objetos internos.
+3. Outra parte do programa pode manter uma referência ao objeto depois que a função termina.
+4. O pool executa tarefas nativas específicas. Ele não divide automaticamente um cálculo JavaScript entre suas threads.
 
 Próximo: [V8, desempenho e erros](02-v8-performance-e-erros.md).

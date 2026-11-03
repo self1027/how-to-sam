@@ -1,6 +1,6 @@
 # 06 — Testes, feature flags e entrega gradual
 
-**Objetivo:** fazer a verificação acompanhar a velocidade de produção de código.
+**Objetivo:** verificar o comportamento do código e liberar mudanças aos poucos.
 
 ## 1. O teste deve proteger um comportamento
 
@@ -14,11 +14,11 @@ Um teste útil expressa algo que o sistema precisa garantir. No fluxo de pagamen
 | Ponta a ponta | Caminho completo relevante | Requisição HTTP gera o resultado de negócio |
 | Carga e estresse | Comportamento sob volume e saturação | Verificar latência e erros com aumento de requisições |
 
-As fronteiras entre os nomes variam entre equipes. Deixe claro o que o teste executa, quais dependências são reais e qual falha ele consegue detectar.
+As equipes podem usar esses nomes de formas diferentes. Explique o que cada teste executa, quais dependências são reais e quais falhas ele detecta.
 
 ## 2. Ambientes efêmeros e mocks
 
-Uma estratégia é criar um banco descartável na pipeline, aplicar a estrutura necessária, testar a API e destruir o ambiente ao fim. Isso evita que testes dependam de um banco compartilhado cheio de dados imprevisíveis.
+Uma estratégia é criar um banco temporário na pipeline, preparar sua estrutura e testar a API. Ao terminar, o ambiente é removido. Assim, os testes não dependem dos dados imprevisíveis de um banco compartilhado.
 
 Um fluxo de validação pode ser:
 
@@ -32,13 +32,13 @@ Criar banco de teste
     → encerrar os recursos mesmo se houver falha
 ```
 
-Reduzir mocks pode aumentar a fidelidade dos testes. Um banco real descartável verifica consultas e restrições que um mock não reproduz. Entretanto, substitutos são úteis para falhas difíceis de simular e para integrações externas que não devem ser acionadas em cada teste.
+Um banco real temporário permite testar consultas e restrições que um mock pode não reproduzir. Já os mocks ajudam a simular falhas difíceis de provocar e a testar integrações externas sem chamá-las a cada execução.
 
 Se dividir a suíte em várias máquinas, cada grupo deve ter isolamento de dados e recursos. Paralelizar testes que modificam o mesmo estado pode criar falhas intermitentes. O número de testes por máquina deve ser ajustado ao custo dos cenários e aos recursos disponíveis.
 
 ## 3. Valide as respostas dos parceiros em runtime
 
-Uma anotação TypeScript não garante que um JSON vindo pela rede seja válido. Uma mudança de contrato do fornecedor pode passar silenciosamente até um ponto distante da origem do problema.
+Uma anotação TypeScript não verifica o JSON que chega pela rede. Se o fornecedor mudar o formato da resposta, o erro pode aparecer só mais adiante, longe da integração que o causou.
 
 Exemplo TypeScript com Zod. Dependência necessária: `npm install zod`. A função abaixo é um fragmento reutilizável; o chamador fornece a URL e trata as falhas:
 
@@ -130,7 +130,7 @@ Uma flag não garante rollback de dados. Migrações destrutivas e efeitos já e
 
 ## 5. Fallback exige equivalência de negócio
 
-Uma estratégia de fallback é chamar uma versão anterior quando a nova falha. Isso pode ser útil em uma consulta sem efeitos colaterais, desde que o resultado alternativo seja aceitável e a falha fique visível.
+Fallback é recorrer a uma alternativa quando a tentativa principal falha. Uma opção é chamar a versão anterior de uma consulta sem efeitos colaterais. O resultado precisa ser aceitável para o negócio, e a falha deve ficar registrada.
 
 Exemplo completo para uma leitura simulada:
 
@@ -159,7 +159,7 @@ Fail-fast significa interromper quando uma condição impede continuar corretame
 
 ## 6. Revisão adversarial e testes de falha
 
-Uma revisão adversarial tenta quebrar a implementação: entradas inesperadas, timeouts, repetição, indisponibilidade e volume. O valor está em procurar hipóteses que os testes felizes não cobrem.
+Uma revisão adversarial procura situações em que a implementação falha: entradas inesperadas, timeouts, repetição, indisponibilidade e excesso de volume. Ela explora o que pode dar errado além do caminho de sucesso.
 
 Planeje experimentos em um ambiente controlado, com limites de carga e critérios de parada. A lista de cenários pode incluir resposta inválida de parceiro, worker encerrado durante o processamento, mensagem duplicada e banco temporariamente indisponível.
 
@@ -169,7 +169,7 @@ Um teste de carga aumenta volume para observar comportamento. Chaos engineering 
 
 Uma tarefa relevante deve indicar comportamento esperado, validação, métricas necessárias e ação de recuperação. Algumas mudanças precisam apenas de um teste e um log; outras exigem dashboard, flag e alerta.
 
-O critério não é acrescentar todos os mecanismos a toda alteração. É garantir que o time consiga verificar o resultado e responder a uma falha proporcional à importância do fluxo.
+Escolha os mecanismos de acordo com a importância do fluxo. O time precisa conseguir verificar o resultado e agir se houver uma falha.
 
 ## Revisão ativa
 
@@ -178,6 +178,11 @@ O critério não é acrescentar todos os mecanismos a toda alteração. É garan
 3. Por que desligar uma flag não desfaz automaticamente uma cobrança?
 4. Qual diferença entre fallback de leitura e retry de escrita com efeito financeiro?
 
-**Respostas esperadas:** consultas, migrações e restrições reais; dados externos precisam ser validados em execução; efeitos persistidos não desaparecem com o roteamento; uma nova escrita pode repetir um efeito já confirmado pelo destino.
+### Respostas esperadas
+
+1. Um banco real pode revelar erros nas consultas, migrações e restrições que o mock não reproduz.
+2. O tipo TypeScript não confere os dados recebidos. Essa validação precisa acontecer durante a execução.
+3. A flag muda qual código será usado. Ela não remove uma cobrança já realizada ou outros efeitos persistidos.
+4. Um fallback de leitura pode devolver um resultado alternativo aceitável. Repetir uma escrita financeira pode cobrar de novo se a primeira tentativa já tiver sido aceita.
 
 Próximo: [Infraestrutura Node.js na AWS](07-infraestrutura-nodejs-na-aws.md).

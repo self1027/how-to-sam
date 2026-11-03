@@ -2,9 +2,9 @@
 
 **Objetivo:** escolher um modelo de execução pelo comportamento da carga e pela capacidade operacional da equipe.
 
-## 1. O compromisso entre conveniência e controle
+## 1. Quanto controle a equipe precisa?
 
-Um serviço gerenciado assume parte da operação, mas continua exigindo configuração e acompanhamento. Uma infraestrutura mais controlada pela equipe pode oferecer flexibilidade, ao custo de tempo, conhecimento e manutenção.
+Em um serviço gerenciado, o provedor cuida de parte da operação. A equipe ainda configura e acompanha o serviço. Administrar mais partes da infraestrutura dá flexibilidade, mas exige tempo, conhecimento e manutenção.
 
 Preservar tempo para o produto é um critério relevante em empresas pequenas. Isso não significa que todo serviço gerenciado seja barato no início e caro depois: o custo depende de utilização, tráfego, disponibilidade, armazenamento e esforço humano.
 
@@ -16,7 +16,7 @@ Preservar tempo para o produto é um critério relevante em empresas pequenas. I
 | ECS com Fargate | Containers, serviços, rede e políticas de escala | APIs e workers em containers sem administrar os hosts |
 | EKS/Kubernetes | Aplicação e uma plataforma operacional mais ampla | Necessidades que justifiquem sua complexidade |
 
-A tabela compara modelos de execução sem estabelecer uma progressão obrigatória entre ferramentas.
+Você pode combinar esses modelos conforme a necessidade. Não é preciso passar por todos eles em uma ordem fixa.
 
 ## 2. EC2 e PM2
 
@@ -39,15 +39,15 @@ module.exports = {
 
 Cada processo tem seu próprio heap. Um `Map` criado em um processo não é compartilhado automaticamente com os outros. Sessões, locks e dados que precisam de coordenação devem usar um mecanismo apropriado. O [modo cluster do PM2](https://pm2.keymetrics.io/docs/usage/cluster-mode/) também exige atenção ao encerramento e à ausência de estado local indispensável.
 
-Reinício automático ajuda na recuperação, mas não torna falhas invisíveis. Uma requisição em andamento pode falhar, e vários processos na mesma VM compartilham o risco de perda da máquina.
+O reinício automático ajuda a recuperar a aplicação. Ainda assim, requisições em andamento podem falhar. Se todos os processos estão na mesma VM, a perda dessa máquina afeta todos eles.
 
 ## 3. Serverless e stateless não são sinônimos
 
-Serverless descreve uma abstração de infraestrutura: o provedor administra servidores para você. Stateless significa que uma instância não precisa preservar localmente o estado de negócio entre atendimentos para o sistema funcionar corretamente.
+Em serverless, o provedor administra os servidores para você. Já uma instância stateless não precisa guardar localmente o estado do negócio entre atendimentos para o sistema funcionar corretamente.
 
 Um processo stateless pode manter conexões e caches em memória para eficiência. A correção não pode depender de ele sobreviver, nem de uma próxima chamada chegar à mesma instância.
 
-Uma função Lambda pode reutilizar um ambiente já inicializado, preservando variáveis de módulo e conexões. O provedor também pode criar outro ambiente ou descartar o existente. Portanto, reaproveitamento é uma oportunidade, não uma garantia. Veja o [ciclo de vida do ambiente Lambda](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html).
+Uma função Lambda pode reutilizar um ambiente já inicializado, com suas variáveis de módulo e conexões. Mas o provedor pode descartar esse ambiente ou criar outro. Aproveite a reutilização quando ela ocorrer, sem depender dela para o código funcionar. Veja o [ciclo de vida do ambiente Lambda](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html).
 
 ## 4. Lambda: evento entra, execução acontece
 
@@ -63,7 +63,7 @@ Enviar chamadas periódicas pode estimular reutilização, mas não assegura que
 
 ### O banco não escala na mesma proporção automaticamente
 
-Uma expansão rápida de funções pode abrir conexões demais com o banco. O orçamento de conexões precisa considerar concorrência, tamanho dos pools e margem operacional. CPU é apenas um sinal: observe também conexões ativas, espera por pool, locks e latência das consultas.
+Se muitas funções começarem a executar ao mesmo tempo, elas podem abrir conexões demais com o banco. Calcule o limite considerando quantas funções executam juntas, o tamanho de cada pool e uma margem de segurança. Além da CPU, acompanhe conexões ativas, espera por uma conexão livre, locks e tempo das consultas.
 
 Proxies e poolers, como PgBouncer em cenários PostgreSQL, podem ajudar, mas precisam ser compatíveis com as transações e o modo de uso da aplicação. Limitar a concorrência do consumidor também protege dependências.
 
@@ -77,7 +77,7 @@ Essa combinação pode atender APIs e workers que precisam de processos de longa
 
 **Ajuste técnico:** não ter o mesmo timeout de uma invocação Lambda não significa executar eternamente. Containers podem ser substituídos durante deploy, manutenção e falhas. Estado durável deve ficar fora da instância, e operações em andamento precisam lidar com interrupção.
 
-O autoscaling também precisa de configuração. Para um worker, idade de mensagens ou backlog pode refletir melhor a demanda do que CPU. Mais réplicas só ajudam se o banco e os fornecedores suportarem a concorrência resultante.
+O aumento automático de capacidade, ou autoscaling, também precisa ser configurado. Para um worker, a idade das mensagens ou a quantidade de trabalho pendente pode indicar melhor a demanda que a CPU. Antes de aumentar as réplicas, confira se o banco e os fornecedores suportam mais acessos simultâneos.
 
 ## 6. EKS e Kubernetes
 

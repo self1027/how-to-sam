@@ -4,7 +4,7 @@
 
 ## 1. Esperar uma operação não significa bloquear o event loop
 
-Uma função `async` sempre devolve uma Promise. A execução começa normalmente e prossegue até uma suspensão, como um `await` de uma operação pendente.
+Uma função `async` sempre devolve uma Promise. Seu código começa a executar normalmente e continua até encontrar uma suspensão, como um `await` de uma operação pendente.
 
 **Complemento didático:** o exemplo abaixo introduz o comportamento de Promises e mostra a diferença entre suspender um fluxo e bloquear a thread.
 
@@ -24,7 +24,7 @@ await tarefa;
 console.log('5: terminou');
 ```
 
-A continuação de `carregar()` espera o timer. Nesse intervalo, a thread pode executar outros callbacks. Por isso, dizer que `await` “bloqueia o script” deve ser entendido como uma dependência de ordem dentro daquele fluxo, não como bloqueio do processo inteiro.
+`carregar()` só continua depois que o timer termina. Enquanto isso, a thread pode executar outros callbacks. O `await` faz aquele fluxo esperar, sem bloquear o processo inteiro.
 
 Se você colocar um cálculo pesado antes do primeiro `await`, ele continuará rodando na thread atual. Envolver uma função em `Promise.resolve()` também não a transfere para outra thread. A distinção entre execução JavaScript e trabalho nativo está no guia [Don't Block the Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
 
@@ -64,11 +64,11 @@ void Promise.resolve()
   .catch(registrarFalha);
 ```
 
-Isso explicita que o chamador não espera e trata a rejeição. Não fornece persistência, retry nem garantia de execução após o processo encerrar. Para cobrança, envio obrigatório ou processamento que não pode sumir, use um mecanismo durável apropriado.
+Nesse trecho, o chamador segue sem esperar, e o `catch` trata uma possível rejeição. O trabalho não é salvo nem repetido automaticamente e pode se perder se o processo encerrar. Cobranças, envios obrigatórios e outros trabalhos que não podem sumir precisam de um mecanismo durável.
 
 ## 3. Concorrência, paralelismo e ordem
 
-Concorrência é administrar trabalhos que estão em andamento no mesmo período. Paralelismo é executar trabalho simultaneamente em recursos distintos. Um servidor pode concorrer no atendimento de muitas requisições sem executar todos os callbacks JavaScript em paralelo.
+Concorrência é lidar com vários trabalhos em andamento no mesmo período. Paralelismo é executar trabalhos ao mesmo tempo em recursos diferentes. Um servidor pode atender muitas requisições de forma concorrente, executando um callback JavaScript por vez.
 
 Se duas consultas são independentes, iniciá-las juntas pode reduzir o tempo total de espera:
 
@@ -99,7 +99,7 @@ Para CPU intensa, `worker_threads` permite executar JavaScript em paralelo. Cria
 
 ## 4. Observabilidade começa pelo fluxo de negócio
 
-Uma abordagem é instrumentar uma função orquestradora e as operações importantes que ela chama. Por exemplo:
+Para observar um fluxo, registre o tempo e o resultado da função que coordena o trabalho e das etapas importantes que ela chama. Por exemplo:
 
 ```text
 processarPedido
@@ -120,7 +120,7 @@ Três formas comuns de observar o sistema se complementam:
 | Métricas | Com que frequência e intensidade isso acontece? |
 | Traces | Qual caminho uma operação percorreu e onde gastou tempo? |
 
-Não é necessário instrumentar toda função auxiliar. Priorize fronteiras, fluxos críticos, dependências e pontos onde os dados orientarão uma decisão. Instrumentação também possui custo e precisa de limites de volume.
+Você não precisa medir toda função auxiliar. Comece pelos fluxos críticos, pelas chamadas a dependências e pelos pontos de entrada e saída. Registre dados que ajudem a tomar decisões, com limites de volume para controlar o custo da coleta.
 
 ## 5. Medindo duração corretamente
 
@@ -157,7 +157,9 @@ console.table(amostras);
 
 `performance.now()` é apropriado para intervalos locais. Timestamp de calendário, como `Date.now()`, atende outras finalidades, como registrar quando um evento aconteceu. Consulte as [APIs de medição do Node.js](https://nodejs.org/api/perf_hooks.html).
 
-O array é apenas um coletor didático. Em produção, envie métricas a um coletor com buffer e descarte controlados. Uma falha no envio de telemetria não deve substituir o resultado original da operação. IDs de pedido podem ajudar em logs e traces, mas transformá-los em rótulos de métricas cria cardinalidade muito alta.
+O array serve para o estudo. Em produção, use um coletor que limite os dados em espera e controle o descarte. Se o envio das métricas falhar, preserve o resultado original da operação.
+
+IDs de pedido ajudam em logs e traces. Em rótulos de métricas, porém, cada ID cria um valor diferente. Essa grande quantidade de valores é chamada de alta cardinalidade.
 
 ## 6. P50, P95 e P99
 
@@ -165,7 +167,7 @@ Percentil descreve uma posição na distribuição, não a média aritmética.
 
 Se o P95 das durações é 500 ms, aproximadamente 95% das observações ficaram em até 500 ms e cerca de 5% acima, dependendo da convenção e das aproximações do cálculo. Isso descreve **observações**, não necessariamente 95% dos usuários: uma mesma pessoa pode gerar muitas chamadas.
 
-P50 representa o comportamento mediano. P95 e P99 ajudam a revelar a cauda de latência que a média pode esconder. Poucas amostras, janelas curtas e mistura de rotas diferentes podem gerar interpretações ruins.
+P50 é a mediana. P95 e P99 ajudam a enxergar as respostas mais lentas, que podem ficar escondidas na média. Para interpretá-los, considere a quantidade de amostras, o período medido e quais rotas entraram no cálculo.
 
 **Complemento didático:** acompanhar percentis por etapa não permite simplesmente somá-los para obter o percentil total. As observações lentas de cada etapa podem ocorrer em requisições diferentes. Meça também o fluxo completo.
 
@@ -204,6 +206,11 @@ Defina severidade, responsável e ação. Um alerta que apenas diz “algo deu e
 3. Qual diferença entre medir aceitação de um job e conclusão do trabalho?
 4. Por que P95 de requisições não equivale exatamente a P95 de usuários?
 
-**Respostas esperadas:** o local de execução não muda automaticamente; filas duráveis permitem retomar trabalho; aceitação mede publicação e conclusão inclui espera e processamento; usuários podem ter quantidades distintas de chamadas.
+### Respostas esperadas
+
+1. Retirar o `await` muda a espera do chamador, mas não transfere o cálculo para outra thread.
+2. Quando o trabalho precisa ficar salvo e ser retomado mesmo se o processo encerrar.
+3. A aceitação mede a publicação do job. A conclusão inclui a espera na fila e o processamento.
+4. Uma pessoa pode gerar mais requisições que outra. O percentil das chamadas não corresponde diretamente ao percentil dos usuários.
 
 Próximo: [Arquitetura modular e contratos](04-arquitetura-modular-e-contratos.md).

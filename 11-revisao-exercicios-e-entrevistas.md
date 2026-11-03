@@ -1,6 +1,6 @@
 # 11 — Revisão, exercícios e preparação para entrevistas
 
-**Objetivo:** conectar runtime, código, infraestrutura e experiência de produto em uma explicação coerente.
+**Objetivo:** explicar como runtime, código e infraestrutura afetam o que o usuário recebe.
 
 ## 1. Revisão por perguntas
 
@@ -42,7 +42,7 @@ Tente responder antes de consultar o gabarito.
 
 Execute os exemplos dos capítulos 01 e 03. Primeiro preveja a ordem das mensagens. Depois acrescente um laço limitado antes do primeiro `await` e observe quando o controle volta ao chamador.
 
-Não tire conclusões de desempenho a partir do tempo exato de um timer. O objetivo é reconhecer que a parte síncrona executa antes da suspensão e que o callback do timer precisa de uma oportunidade para rodar.
+Observe a ordem dos acontecimentos: a parte síncrona executa antes da suspensão, e o callback do timer precisa esperar sua vez de rodar. O tempo exato do timer, sozinho, não permite concluir se o código tem bom desempenho.
 
 **Entrega de estudo:** um parágrafo explicando onde houve espera, onde houve execução e por que chamar uma função `async` não a tornou paralela.
 
@@ -77,9 +77,9 @@ Desenhe a solução em texto, considerando:
 
 ### Caminho de resposta possível
 
-A API valida a assinatura exigida pelo provedor e o schema, persiste a recepção e um evento de outbox na mesma transação, e confirma a aceitação após o commit. Um publicador encaminha o trabalho à fila. O worker processa com uma chave de idempotência e registra o resultado.
+A API valida a assinatura exigida pelo provedor e o formato dos dados com um schema. Depois, salva o recebimento e um evento de outbox na mesma transação. Só confirma o aceite após o commit. Um publicador envia o trabalho à fila, e o worker usa uma chave de idempotência para processá-lo e registrar o resultado.
 
-Essa é uma opção, não a única. Se a publicação direta em fila já oferece a garantia necessária para o caso, o desenho pode mudar. Justifique onde fica o registro durável e como evitar perder a publicação ou repetir o efeito.
+Publicar diretamente na fila também pode atender ao caso, se oferecer as garantias necessárias. Em qualquer desenho, explique onde o trabalho fica salvo e como evitar a perda da publicação ou a repetição do efeito.
 
 Se a API confirmou antes de qualquer persistência e caiu logo depois, o desenho não cumpriu o requisito. Se o worker marca como concluído antes de realizar o trabalho, também existe uma janela de perda. A ordem dos passos importa.
 
@@ -103,11 +103,11 @@ Para terceiros, trate resultados incertos: timeout não prova que a operação r
 
 O aplicativo e um painel administrativo consultam a mesma tabela de transações. O painel calcula totais por período, status e empresa, enquanto a tabela cresce.
 
-Uma investigação coerente começa pelas consultas reais e seus planos, volume lido e índices. Verifique paginação e elimine transferência desnecessária. Para agregações reutilizadas, avalie cache com uma tolerância de atualização explícita.
+Comece pelas consultas reais: examine o plano de execução, o volume lido e os índices. Confira a paginação e evite transferir dados que a tela não usa. Se os mesmos totais são consultados várias vezes, avalie cache e defina quanto atraso de atualização é aceitável.
 
 Se a leitura analítica disputa recursos com a operação, considere réplicas ou um modelo de leitura separado. Dados históricos podem ser arquivados com um protocolo de recuperação. Não escolha sharding apenas porque a tabela atingiu uma quantidade arbitrária de linhas.
 
-**Critério de conclusão:** propor duas alternativas, indicar o efeito esperado e declarar o compromisso de consistência e operação de cada uma.
+**Critério de conclusão:** propor duas alternativas e explicar o efeito esperado, como cada uma mantém os dados consistentes e que trabalho de operação exige.
 
 <p align="center">
   <strong>Diagrama — Dashboard lento: investigação e alternativas</strong>
@@ -127,7 +127,7 @@ Se a leitura analítica disputa recursos com a operação, considere réplicas o
 
 Você precisa corrigir a duplicação de notificações em um módulo existente. Prepare uma tarefa com problema, resultado esperado, pontos de entrada, comportamento a testar e sinais para acompanhar depois da entrega.
 
-Uma boa tarefa não pede apenas “melhorar idempotência”. Ela descreve um evento repetido, o efeito atual e o que deve passar a acontecer. A revisão precisa questionar concorrência, falha após o envio e duração da proteção, além de conferir o caminho feliz.
+Descreva na tarefa o que acontece hoje quando um evento se repete e qual deve ser o novo resultado. Pedir apenas para “melhorar idempotência” deixa o comportamento em aberto. Na revisão, confira o caminho de sucesso e também eventos simultâneos, falhas após o envio e o prazo da proteção contra duplicatas.
 
 **Critério de conclusão:** uma pessoa que não participou da conversa deve conseguir verificar o comportamento desejado usando a descrição e as evidências entregues.
 
@@ -155,6 +155,6 @@ Use essas respostas como estrutura de raciocínio. Diferencie claramente experi�
 
 Na primeira revisão, explique os conceitos sem consultar os arquivos. Em uma revisão posterior, refaça um exemplo e responda a um estudo de caso. Depois, retome apenas os pontos em que houve dúvida e tente justificar uma alternativa à solução escolhida.
 
-O indicador de compreensão é conseguir conectar comportamento, causa, compromisso e verificação. Memorizar nomes de serviços sem esse encadeamento não resolve as situações propostas neste guia.
+Para conferir se entendeu, explique o que acontece, por que acontece, quais são os limites da solução e como verificar o resultado. Use os casos deste capítulo para praticar essas relações.
 
 Consulte também: [Ajustes técnicos e glossário](12-ajustes-tecnicos-e-glossario.md).

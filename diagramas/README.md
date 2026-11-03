@@ -2,7 +2,7 @@
 
 Os 24 diagramas complementam os 12 capítulos do guia e estão organizados em 13 páginas no [quadro tldraw](https://www.tldraw.com/f/7Hgqxqm5PZ4YaknNBKr7s). O acesso por link permite somente visualização.
 
-Os diagramas também aparecem diretamente no [README do guia](../README.md) e nas seções correspondentes dos 12 capítulos. Títulos, imagens, legendas e links ficam centralizados. Os SVGs têm fundo claro, borda discreta e margem interna, com texto alternativo, opção de ampliar e link para a fonte Mermaid.
+Você também encontra os diagramas no [README do guia](../README.md) e ao longo dos 12 capítulos. Cada imagem tem texto alternativo, um link para ampliar e outro para abrir a fonte Mermaid.
 
 Use o menu de páginas do quadro para escolher um capítulo. Cada página reúne objetivo, fluxos, pontos para lembrar e uma pergunta de revisão.
 
@@ -14,9 +14,11 @@ Arquivos disponíveis:
 - [Registro da conferência do quadro](validacao-tldraw.json) e [validação dos 24 SVGs](svg/validacao.json), incluindo sintaxe Mermaid, XML e abertura como imagem no navegador.
 - [Configuração de exportação Mermaid](mermaid.config.json), [preparação do fundo dos SVGs](preparar-svg.ps1) e [verificador de SVGs](validar-svg.ps1).
 
-Os arquivos Mermaid da tabela abaixo preservam as fontes dos diagramas. A organização visual, as cores e as notas adicionais do quadro ficam preservadas no arquivo nativo `.tldr`.
+Use os arquivos Mermaid para consultar as fontes dos diagramas. O arquivo `.tldr` guarda a organização visual, as cores e as notas adicionais do quadro.
 
-Para novas exportações, use `mermaid.config.json`: `htmlLabels: false` deve estar na raiz da configuração para gerar rótulos SVG sem HTML embutido, conforme a [configuração oficial do Mermaid](https://mermaid.js.org/config/schema-docs/config-properties-htmllabels.html). Depois execute os comandos abaixo na raiz do repositório. A preparação adiciona o fundo e pode ser repetida sem acumular margens. O verificador rejeita XML malformado, HTML embutido e ausência do fundo.
+Para exportar novos SVGs, use `mermaid.config.json`. A opção `htmlLabels: false` deve ficar na raiz da configuração para gerar rótulos sem HTML embutido. Veja a [configuração oficial do Mermaid](https://mermaid.js.org/config/schema-docs/config-properties-htmllabels.html).
+
+Depois, execute os comandos abaixo na raiz do repositório. O primeiro adiciona fundo claro, borda e margem interna; você pode repeti-lo sem acumular margens. O segundo verifica o XML, a presença do fundo e a ausência de HTML embutido.
 
 ```powershell
 powershell -NoProfile -File diagramas/preparar-svg.ps1
@@ -39,8 +41,6 @@ powershell -NoProfile -File diagramas/validar-svg.ps1
 | 11 · Casos integrados | Conectar os capítulos em decisões | [1 · Webhook de pagamento: do aceite ao resultado](11-webhook.mmd) · [2 · Dashboard lento: investigação e alternativas](11-dashboard.mmd) |
 | 12 · Revisão e glossário | Revisar conceitos sem generalizações | [Mapa das distinções que sustentam o guia](12-conceitos.mmd) |
 
-Cada página do quadro apresenta o objetivo, os fluxos, ressalvas e uma pergunta de revisão. Os modelos são didáticos e não representam recomendações universais de arquitetura.
-
-O plugin tldraw criou o quadro. Como sua conexão de edição não reconheceu o editor aberto, a montagem foi concluída pela interface web do tldraw, usando a importação nativa de Mermaid. Uma nova abertura do quadro confirmou as 13 páginas, os 24 diagramas e as conexões salvas.
+Os diagramas simplificam os conceitos para estudo. Avalie os requisitos do projeto antes de usar um desses modelos como arquitetura.
 
 As fontes principais são os capítulos locais. Foram conferidas também as referências oficiais de [event loop e worker pool do Node.js](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop), [transactional outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html) e [TTL do DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html).

@@ -4,7 +4,7 @@
 
 ## 1. De texto a execução
 
-O código-fonte precisa ser analisado antes de executar. O percurso conceitual pode ser representado assim:
+Antes de executar, o motor analisa o código-fonte. Este é um resumo do caminho:
 
 ```text
 Código JavaScript
@@ -23,7 +23,7 @@ AST significa *abstract syntax tree*: uma estrutura que representa a sintaxe. By
 | Maglev | Compilador otimizador intermediário |
 | TurboFan | Compilador de otimizações mais elaboradas |
 
-Essa é uma apresentação dos componentes apresentados neste capítulo, não uma promessa de que toda função atravesse todos eles em sequência. Versão do V8, plataforma e configuração influenciam os caminhos disponíveis. A documentação de [Ignition](https://v8.dev/docs/ignition) e o artigo de [Maglev](https://v8.dev/blog/maglev) explicam esses papéis e seus compromissos de custo de compilação.
+Uma função pode usar apenas parte desses componentes. O caminho depende da versão do V8, da plataforma e da configuração. A documentação de [Ignition](https://v8.dev/docs/ignition) e o artigo de [Maglev](https://v8.dev/blog/maglev) explicam o papel e o custo de compilação de cada um.
 
 <p align="center">
   <strong>Diagrama — Modelo conceitual de execução e otimização</strong>
@@ -45,11 +45,11 @@ Essa é uma apresentação dos componentes apresentados neste capítulo, não um
 
 ## 2. Código quente e hipóteses de otimização
 
-Um motor JIT pode usar informações observadas durante a execução para especializar código. Se um acesso recebe repetidamente objetos com formato semelhante, há oportunidades de executar esse acesso de forma eficiente.
+Um motor JIT observa o código durante a execução e pode gerar uma versão otimizada para os casos mais frequentes. Por exemplo, acessar repetidamente objetos com formato semelhante pode permitir um acesso mais eficiente.
 
-Se as hipóteses deixam de valer, o motor precisa usar outro caminho ou desfazer otimizações. Isso é diferente de dizer que o código “ficou errado”: uma operação perfeitamente válida pode ter outro custo de execução.
+Se o código passa a receber dados diferentes dos esperados, o motor pode precisar usar outro caminho ou desfazer otimizações. O código continua válido, mas seu custo de execução pode mudar.
 
-Daí surge a ideia de aquecimento: uma medição logo após iniciar o processo pode apresentar comportamento diferente de uma medição em regime estável. Não existe um número universal de chamadas após o qual toda função fica otimizada, nem um ganho fixo de 200 ou 300 vezes.
+Esse período de adaptação ajuda a explicar o aquecimento. Medir logo após iniciar o processo pode dar um resultado diferente de medir depois de algum tempo de execução. Não há um número de chamadas que otimize toda função, nem um ganho fixo de 200 ou 300 vezes.
 
 Para um endpoint dominado por uma consulta de dois segundos, economizar alguns microssegundos em um objeto pode não produzir efeito perceptível. O caminho crítico precisa ser identificado antes.
 
@@ -74,7 +74,7 @@ console.log(usuarioVariavel('Ana', false));  // { nome: 'Ana' }
 console.log(usuarioNormalizado('Ana', false)); // { nome: 'Ana', ativo: false }
 ```
 
-A segunda função produz um contrato de dados mais uniforme. Isso pode simplificar tanto a leitura quanto os acessos repetidos. Porém, ela também muda a semântica: propriedade ausente e propriedade com `false` não são sempre equivalentes para serialização, validação e regras de negócio.
+A segunda função sempre devolve os campos `nome` e `ativo`. Isso pode facilitar a leitura e os acessos repetidos. Mas o significado também muda: um campo ausente e um campo com `false` podem ser tratados de formas diferentes na serialização, na validação e nas regras de negócio.
 
 O artigo [Fast properties in V8](https://v8.dev/blog/fast-properties) detalha a relação entre propriedades e estruturas internas. O conselho aplicável é manter modelos de dados claros; introduzir campos artificiais apenas por suspeita de ganho pode piorar o sistema.
 
@@ -86,7 +86,7 @@ A escolha precisa preservar o comportamento correto e ser medida no ponto releva
 
 ## 4. Exceção ou resultado explícito?
 
-Uma opção de tratamento é retornar erros como parte explícita do resultado. Para escolher quando fazer isso, separe falhas esperadas de negócio de situações excepcionais.
+Uma função pode devolver um erro como parte do resultado. Para decidir quando fazer isso, separe recusas esperadas do negócio de falhas excepcionais.
 
 Exemplo completo em TypeScript:
 
@@ -148,7 +148,7 @@ function calcular(operacao, a, b) {
 console.log(calcular('somar', 2, 3)); // 5
 ```
 
-Isso preserva a possibilidade de selecionar comportamento sem interpretar código arbitrário. Afirmar que todo `eval` necessariamente refaz todo o pipeline sem qualquer reaproveitamento é uma simplificação excessiva.
+Assim, o programa escolhe uma operação entre as funções conhecidas, sem interpretar texto como código. Também é impreciso afirmar que todo `eval` refaz todas as etapas de execução sem reaproveitar nada.
 
 ## 6. Como estudar desempenho sem se enganar
 
@@ -182,6 +182,11 @@ Testes de carga e observabilidade se complementam. Essa combinação é mais con
 - Qual é a diferença entre uma recusa esperada e uma exceção inesperada?
 - Como descobrir se o gargalo está no JavaScript, no banco ou na integração externa?
 
-**Respostas esperadas:** comportamento pode mudar com a execução; correção e contrato vêm antes de otimizações; recusas podem integrar o tipo de retorno; métricas por etapa e profiling ajudam a localizar o custo.
+### Respostas esperadas
+
+1. Durante o aquecimento, o motor coleta informações e pode otimizar o código. Por isso, medir só o início pode dar um resultado diferente de medir após algum tempo de execução.
+2. Não por si só. Preserve o contrato e o comportamento correto antes de buscar um possível ganho de desempenho.
+3. Uma recusa esperada, como saldo insuficiente, pode fazer parte do resultado da função. Uma falha inesperada pode ser tratada como exceção.
+4. Meça cada etapa do fluxo e use profiling para descobrir onde o tempo é gasto.
 
 Próximo: [Assincronismo e observabilidade](03-assincronismo-e-observabilidade.md).

@@ -6,7 +6,7 @@
 
 Se muitas pessoas pedem o mesmo relatório, recalculá-lo em cada chamada pode gastar recursos sem melhorar a resposta. Um cache permite reutilizar um resultado por um período aceitável.
 
-Esse ganho vem de aceitar algum compromisso: o resultado pode não refletir a última alteração da fonte. Antes de escolher o TTL, pergunte quanto atraso o produto permite e o que acontece se o cache ficar indisponível.
+Ao reutilizar um resultado, você pode deixar de mostrar a alteração mais recente da fonte. Antes de escolher o prazo de expiração (TTL), defina quanto atraso o produto aceita e o que fazer se o cache ficar indisponível.
 
 Um exemplo é um dashboard pesado cujos resultados são guardados em Redis. É uma boa hipótese para investigar, mas não substitui analisar a consulta: o primeiro acesso ainda precisa ser atendido sem derrubar o banco.
 
@@ -20,7 +20,7 @@ Ler cache
     └─ não encontrou → consultar fonte → guardar → devolver
 ```
 
-Exemplo completo para estudo, com dependência de relógio explícita e cache em memória. Ele demonstra o comportamento, não uma solução distribuída:
+Neste exemplo completo, o cache fica na memória de um único processo, e a função recebe o relógio que vai usar. O código serve para estudar o comportamento; ele não coordena várias instâncias:
 
 ```js
 function criarConsultaComCache(buscar, ttlMs, agora = Date.now) {
@@ -54,7 +54,7 @@ await consultar('empresa-a');
 console.log(consultasNaFonte); // 2
 ```
 
-Esse cache não possui limite de chaves nem limpeza periódica de entradas que nunca forem acessadas novamente. Também não coordena chamadas simultâneas. Em produção, escolha limites de capacidade, descarte e coordenação adequados; um cache local pertence apenas àquela instância.
+Esse cache não limita a quantidade de chaves nem remove periodicamente as entradas que deixaram de ser acessadas. Também não coordena chamadas simultâneas. Para usá-lo em produção, defina limites, regras de remoção e coordenação entre chamadas. Lembre que cada instância tem seu próprio cache local.
 
 ### Chave de cache também é parte da correção
 
@@ -80,7 +80,7 @@ Quando a origem muda, você pode invalidar a entrada ou aceitar a defasagem até
 
 Se centenas de requisições encontram a mesma entrada expirada ao mesmo tempo, todas podem disparar a consulta pesada. O cache funciona bem enquanto está quente, mas a expiração gera um pico.
 
-Medidas possíveis incluem coalescer consultas simultâneas da mesma chave, atualizar antecipadamente, variar o TTL ou servir temporariamente um resultado anterior quando o produto permitir.
+Você pode fazer as chamadas da mesma chave compartilharem uma única consulta, atualizar o resultado antes de expirar, variar o TTL ou devolver temporariamente o resultado anterior, se o produto permitir.
 
 Escolher uma dessas estratégias depende de consistência, tolerância a atraso e quantidade de instâncias. Um lock apenas em memória coordena só o próprio processo. Qualquer mecanismo de lock precisa lidar com falha e prazo de liberação.
 
@@ -96,7 +96,7 @@ A temperatura é uma metáfora para frequência e custo de acesso:
 | Quente | Dados operacionais recentes | Banco principal da aplicação |
 | Frio | Histórico pouco consultado | Objetos arquivados em S3 |
 
-Não são classificações universais de produto. S3 também pode servir conteúdo acessado com frequência, e existem classes de armazenamento com características distintas. Compare requisitos e custos específicos.
+Essas categorias descrevem o uso dos dados neste exemplo. S3 também pode servir conteúdo muito acessado e oferece classes de armazenamento com características diferentes. Compare os requisitos e custos do seu caso.
 
 ## 5. S3 é armazenamento de objetos
 
@@ -108,7 +108,7 @@ Athena é um serviço de consulta que pode analisar dados em S3; não é simples
 
 ## 6. Arquivamento exige um protocolo
 
-Transferir dados históricos para uma base fria pode reduzir o tamanho da parte operacional. O procedimento precisa garantir que os dados estejam recuperáveis antes da remoção da origem.
+Mover dados históricos para uma base fria pode reduzir o volume no banco operacional. Antes de remover os dados da origem, confirme que consegue recuperá-los no destino.
 
 Um fluxo de referência:
 
@@ -119,9 +119,9 @@ Um fluxo de referência:
 5. Remover ou marcar dados de origem de forma retomável e idempotente.
 6. Observar falhas e reconciliar exportações incompletas.
 
-Esse protocolo é um **complemento didático** à estratégia de manter históricos recentes no banco e antigos no S3. Evita transformar “mover os dados” em uma operação sem possibilidade de auditoria.
+Esse complemento didático detalha os cuidados para manter o histórico recente no banco e o antigo no S3. As etapas permitem conferir o que foi movido e investigar falhas.
 
-Uma aplicação também precisa localizar o histórico. Tentar o banco e, se nada vier, baixar arquivos ao acaso não cria uma estratégia de consulta. Um catálogo ou regra determinística de localização facilita a recuperação.
+A aplicação também precisa saber em qual arquivo está o histórico. Use um catálogo ou uma regra de localização que sempre leve ao arquivo certo. Assim, não será necessário baixar arquivos ao acaso quando o dado não estiver no banco.
 
 Arquivar por idade costuma ter significado de negócio mais claro que simplesmente apagar tudo que excede um número de linhas. Nenhuma quantidade fixa de registros define quando um banco ficará lento: índices, tamanho dos dados e consultas importam.
 
@@ -159,7 +159,7 @@ await pipeline(
 console.log('Arquivo compactado');
 ```
 
-`pipeline` coordena os streams e propaga falhas. Backpressure faz um produtor respeitar a capacidade do próximo estágio, evitando crescimento sem controle dos buffers. Isso não torna o consumo de memória literalmente zero nem elimina o custo de processamento.
+`pipeline` coordena os streams e propaga falhas. Backpressure faz quem envia os dados respeitar a velocidade de quem os recebe. Isso evita que os dados em espera cresçam sem controle, mas ainda há consumo de memória e custo de processamento.
 
 Em uma exportação para S3, o mesmo princípio se aplica: ler de forma paginada ou por stream, transformar e enviar com buffers limitados. A API concreta depende do cliente do banco e do SDK utilizado.
 
@@ -167,7 +167,7 @@ Em uma exportação para S3, o mesmo princípio se aplica: ler de forma paginada
 
 Uma tabela pode atender tanto o aplicativo transacional quanto consultas analíticas complexas. Essa disputa nem sempre se resolve com mais índices.
 
-As alternativas discutidas incluem réplicas, resultados em cache, paginação e histórico separado. Um complemento é manter agregações ou um modelo de leitura para relatórios, com atraso de atualização declarado. Cada alternativa desloca custo e introduz obrigações de consistência e recuperação.
+Você pode usar réplicas, cache, paginação ou um histórico separado. Outra opção é manter totais pré-calculados ou dados organizados para relatórios, deixando claro o atraso de atualização. Para cada escolha, avalie onde ficará o custo e como manter e recuperar os dados.
 
 Antes de escolher, identifique quais dados precisam ser atuais, quais filtros são frequentes e qual volume de consulta existe. “Dashboard em tempo real” precisa ser traduzido em uma tolerância concreta de atraso.
 
@@ -178,6 +178,11 @@ Antes de escolher, identifique quais dados precisam ser atuais, quais filtros s�
 3. O que deve ser verificado antes de remover dados já exportados?
 4. Por que stream e paginação ajudam de modos diferentes?
 
-**Respostas esperadas:** contexto de empresa, filtros, período e variações de acesso; muitos clientes podem recomputar ao mesmo tempo; integridade, localização e capacidade de recuperação; stream limita buffers no fluxo e paginação limita porções da consulta.
+### Respostas esperadas
+
+1. Empresa, filtros, período e qualquer diferença de permissão que altere a resposta.
+2. Várias chamadas podem encontrar a entrada expirada e refazer a mesma consulta ao mesmo tempo.
+3. Confira a integridade dos dados, onde o arquivo está e se consegue ler e recuperar seu conteúdo.
+4. Streams limitam os dados em espera durante a transferência. Paginação divide a consulta em porções menores.
 
 Próximo: [Revisão e exercícios](11-revisao-exercicios-e-entrevistas.md).
